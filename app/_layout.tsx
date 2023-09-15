@@ -5,7 +5,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
+import { Slot, SplashScreen, Stack, router } from "expo-router";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 
@@ -43,12 +43,19 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  // Get this from the local storage to check if the user is logged in or not.
+  const isLoggedIn = false; // Replace this with actual logic
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.replace("/home");
+    } else {
+      router.replace("/welcome");
+    }
+  }, []); // Empty dependency array means this useEffect runs once after the initial render
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(auth)/index" options={{ headerShown: false }} />
-      </Stack>
+      <Slot />
     </ThemeProvider>
   );
 }

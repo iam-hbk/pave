@@ -1,8 +1,9 @@
-import { Button } from "@rneui/themed";
+import { Button, Text } from "@rneui/themed";
 import { Stack } from "@rneui/layout";
 
 import React from "react";
 import { SafeAreaView } from "react-native";
+import { Link } from "expo-router";
 
 const Welcome = () => {
   return (
@@ -13,6 +14,7 @@ const Welcome = () => {
         alignItems: "center",
       }}
     >
+      <Text h1>Welcome</Text>
       <Stack
         row
         spacing={10}
@@ -25,8 +27,12 @@ const Welcome = () => {
           borderRadius: 10,
         }}
       >
-        <Button>Button</Button>
-        <Button>Button</Button>
+        <Link href="/login" asChild>
+          <Button>Login</Button>
+        </Link>
+        <Link href="/register" asChild>
+          <Button>Register</Button>
+        </Link>
       </Stack>
     </SafeAreaView>
   );
