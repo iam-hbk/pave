@@ -15,6 +15,7 @@
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
     "@react-navigation/native": "^6.0.2",
+    "@reduxjs/toolkit": "^1.9.5",
     "@rneui/base": "^4.0.0-rc.8",
     "@rneui/layout": "^0.0.0-alpha.6",
     "@rneui/themed": "^4.0.0-rc.8",
@@ -33,7 +34,8 @@
     "react-native-safe-area-context": "4.6.3",
     "react-native-screens": "~3.22.0",
     "react-native-svg": "13.9.0",
-    "react-native-web": "~0.19.6"
+    "react-native-web": "~0.19.6",
+    "react-redux": "^8.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

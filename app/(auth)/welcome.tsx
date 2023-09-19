@@ -3,7 +3,7 @@ import { Stack } from "@rneui/layout";
 
 import React from "react";
 import { SafeAreaView } from "react-native";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 
 const Welcome = () => {
   return (
@@ -27,12 +27,10 @@ const Welcome = () => {
           borderRadius: 10,
         }}
       >
-        <Link href="/login" asChild>
-          <Button>Login</Button>
-        </Link>
-        <Link href="/register" asChild>
-          <Button>Register</Button>
-        </Link>
+        <Button onPress={() => router.replace("/(auth)/login")}>Login</Button>
+        <Button onPress={() => router.replace("/(auth)/register")}>
+          Register
+        </Button>
       </Stack>
     </SafeAreaView>
   );

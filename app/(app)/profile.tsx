@@ -1,14 +1,17 @@
 import { SafeAreaView } from "react-native";
 import React from "react";
-import { Link } from "expo-router";
-import { Button } from "@rneui/themed";
+import { Link, router } from "expo-router";
+import { Button, useTheme } from "@rneui/themed";
 import { Stack } from "@rneui/layout";
 
 const Profile = () => {
+  const theme = useTheme();
   return (
-    <SafeAreaView style={{
-      flex: 1,
-    }}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+      }}
+    >
       <Stack
         justify="center"
         align="center"
@@ -16,9 +19,13 @@ const Profile = () => {
           flex: 1,
         }}
       >
-        <Link href={"/(auth)/welcome"} asChild>
-          <Button>Logout</Button>
-        </Link>
+        <Button
+          onPress={() => {
+            router.replace("/(auth)/welcome");
+          }}
+        >
+          Logout
+        </Button>
       </Stack>
     </SafeAreaView>
   );

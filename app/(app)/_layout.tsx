@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs } from "expo-router";
-import { Icon } from "@rneui/themed";
+
 import {
   HomeFilled,
   HomeOutlined,
