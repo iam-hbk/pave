@@ -1,10 +1,17 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+// import {
+//   DarkTheme,
+//   DefaultTheme,
+//   // ThemeProvider,
+// } from "@react-navigation/native";
+import { store } from "@/utils/redux/store";
+import { Provider } from "react-redux";
 import {
-  DarkTheme,
-  DefaultTheme,
-  // ThemeProvider,
-} from "@react-navigation/native";
-import { ThemeProvider, createTheme, lightColors,darkColors } from "@rneui/themed";
+  ThemeProvider,
+  createTheme,
+  lightColors,
+  darkColors,
+} from "@rneui/themed";
 import { useFonts } from "expo-font";
 import { Slot, SplashScreen, Stack, router } from "expo-router";
 import { useEffect } from "react";
@@ -74,12 +81,14 @@ function RootLayoutNav() {
   }, []); // Empty dependency array means this useEffect runs once after the initial render
 
   return (
-    <ThemeProvider
-      /* value={colorScheme === "dark" ? DarkTheme : DefaultTheme} */ theme={
-        theme
-      }
-    >
-      <Slot />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider
+        /* value={colorScheme === "dark" ? DarkTheme : DefaultTheme} */ theme={
+          theme
+        }
+      >
+        <Slot />
+      </ThemeProvider>
+    </Provider>
   );
 }

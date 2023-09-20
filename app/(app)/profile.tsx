@@ -1,11 +1,22 @@
 import { SafeAreaView } from "react-native";
 import React from "react";
 import { Link, router } from "expo-router";
-import { Button, useTheme } from "@rneui/themed";
+import { Button, Text, useTheme } from "@rneui/themed";
 import { Stack } from "@rneui/layout";
+import { login, logout, signup } from "@/utils/redux/features/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/utils/redux/store";
 
 const Profile = () => {
+  const user = useSelector((state: RootState) => state.user.value);
+  const dispatch = useDispatch();
   const theme = useTheme();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    router.replace("/(auth)/welcome");
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -19,13 +30,9 @@ const Profile = () => {
           flex: 1,
         }}
       >
-        <Button
-          onPress={() => {
-            router.replace("/(auth)/welcome");
-          }}
-        >
-          Logout
-        </Button>
+        <Text>{user}</Text>
+        <Button onPress={() => handleLogout()}>Logout</Button>
+        <Button onPress={() => dispatch(signup(4))}>Increment</Button>
       </Stack>
     </SafeAreaView>
   );
