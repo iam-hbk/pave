@@ -19,6 +19,8 @@ const Home = () => {
       >
         <Text h1>Home Screen</Text>
         <Text h1>{user}</Text>
+        <Text h2>Data</Text>
+
       </Stack>
     </SafeAreaView>
   );

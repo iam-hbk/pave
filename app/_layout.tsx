@@ -13,10 +13,12 @@ import {
   darkColors,
 } from "@rneui/themed";
 import { useFonts } from "expo-font";
-import { Slot, SplashScreen, Stack, router } from "expo-router";
+import { SplashScreen, Stack, router } from "expo-router";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { Platform } from "react-native";
+import { ApiProvider } from "@reduxjs/toolkit/dist/query/react";
+import { apiSlice } from "@/utils/redux/features/api/apiSlice";
 
 const theme = createTheme({
   lightColors: {
@@ -77,18 +79,25 @@ function RootLayoutNav() {
       router.replace("/home");
     } else {
       router.replace("/welcome");
-    }
+    } 
   }, []); // Empty dependency array means this useEffect runs once after the initial render
 
   return (
     <Provider store={store}>
-      <ThemeProvider
-        /* value={colorScheme === "dark" ? DarkTheme : DefaultTheme} */ theme={
-          theme
-        }
-      >
-        <Slot />
-      </ThemeProvider>
+      <ApiProvider api={apiSlice}>
+        <ThemeProvider
+          /* value={colorScheme === "dark" ? DarkTheme : DefaultTheme} */ theme={
+            theme
+          }
+        >
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              animation: "fade",
+            }}
+          />
+        </ThemeProvider>
+      </ApiProvider>
     </Provider>
   );
 }

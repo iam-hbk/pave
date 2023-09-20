@@ -3,7 +3,7 @@ import React from "react";
 import { Link, router } from "expo-router";
 import { Button, Text, useTheme } from "@rneui/themed";
 import { Stack } from "@rneui/layout";
-import { login, logout, signup } from "@/utils/redux/features/user/userSlice";
+import { unSetUser, updateUser } from "@/utils/redux/features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/utils/redux/store";
 
@@ -13,7 +13,7 @@ const Profile = () => {
   const theme = useTheme();
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(unSetUser());
     router.replace("/(auth)/welcome");
   };
 
@@ -32,7 +32,7 @@ const Profile = () => {
       >
         <Text>{user}</Text>
         <Button onPress={() => handleLogout()}>Logout</Button>
-        <Button onPress={() => dispatch(signup(4))}>Increment</Button>
+        <Button onPress={() => dispatch(updateUser(4))}>Increment</Button>
       </Stack>
     </SafeAreaView>
   );
