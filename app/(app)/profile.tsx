@@ -10,6 +10,8 @@ import {
 } from "@/utils/redux/features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { BarCodeScanner } from "expo-barcode-scanner";
+
+
 const Profile = () => {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
@@ -61,10 +63,10 @@ const Profile = () => {
           }}
         >
           {/* Just for testing */}
-          <BarCodeScanner
+          {/* <BarCodeScanner
             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
             style={StyleSheet.absoluteFillObject}
-          />
+          /> */}
         </View>
         <Stack
           justify="center"

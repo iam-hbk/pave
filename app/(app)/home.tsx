@@ -18,8 +18,9 @@ const Home = () => {
         }}
       >
         <Text h1>Home Screen</Text>
-        <Text h1>{JSON.stringify(user)}</Text>
-        <Text h2>Data</Text>
+        <Text h1>Name:{user?.name}</Text>
+        <Text h1>Email:{user?.email}</Text>
+        <Text h2>{JSON.stringify(user)}</Text>
       </Stack>
     </SafeAreaView>
   );
