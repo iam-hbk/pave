@@ -1,7 +1,7 @@
 import { SafeAreaView, View } from "react-native";
 import React from "react";
 import { Link, router } from "expo-router";
-import { Button, Text, Input, Icon } from "@rneui/themed";
+import { Button, Text, Input, Icon, useTheme } from "@rneui/themed";
 import { useDispatch } from "react-redux";
 import { RootState } from "@/utils/redux/store";
 import { setUser } from "@/utils/redux/features/user/userSlice";
@@ -14,6 +14,7 @@ const Login = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
+  const { theme } = useTheme();
 
   const handleLogin = async () => {
     if (email.trim() === "") {
@@ -36,26 +37,30 @@ const Login = () => {
     <SafeAreaView
       style={{
         flex: 1,
+        marginHorizontal: 15,
         margin: 20,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-around",
+        gap: 10,
       }}
     >
       <Text
         h2
         style={{
-          // marginBottom: 200,
-          marginVertical: 50,
+          alignSelf: "center",
+          paddingHorizontal: 14,
         }}
       >
         Welcome back! Glad to see you, Again!
       </Text>
       <View
         style={{
-          marginVertical: 20,
-          borderWidth: 1,
+          alignItems: "stretch",
           width: "100%",
-          padding: 10,
           display: "flex",
           flexDirection: "column",
+          paddingHorizontal: 10,
         }}
       >
         <Input
@@ -72,14 +77,7 @@ const Login = () => {
           keyboardType="email-address"
           onChangeText={setEmail}
           value={email}
-          placeholder="Enter your email"
-          inputContainerStyle={{
-            padding: 10,
-            backgroundColor: "#E7E7E7",
-            borderRadius: 10,
-            borderWidth: 1,
-            borderColor: "#8391A1",
-          }}
+          placeholder="Enter your student email"
         />
         <Input
           leftIcon={
@@ -108,13 +106,6 @@ const Login = () => {
           onChangeText={setPassword}
           value={password}
           placeholder="Enter your password"
-          inputContainerStyle={{
-            padding: 10,
-            backgroundColor: "#E7E7E7",
-            borderRadius: 10,
-            borderWidth: 1,
-            borderColor: "#8391A1",
-          }}
         />
         <Link href={"/(auth)/forgotPassword"} asChild>
           <Text
@@ -128,10 +119,26 @@ const Login = () => {
             Forgot Password ?
           </Text>
         </Link>
-        <Button title={"Login"} onPress={() => handleLogin()} />
-
-
+        <Button
+          style={{
+            margin: 10,
+          }}
+          title={"Login"}
+          onPress={() => handleLogin()}
+        />
       </View>
+      <Text
+        style={{
+          alignSelf: "center",
+          fontSize: 18,
+          margin: 10,
+        }}
+      >
+        Don’t have an account?{" "}
+        <Link href={"/(auth)/register"} asChild>
+          <Text style={{ color: theme.colors.primary }}>Register Now</Text>
+        </Link>
+      </Text>
     </SafeAreaView>
   );
 };
