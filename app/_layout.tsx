@@ -12,6 +12,8 @@ import {
   lightColors,
   darkColors,
 } from "@rneui/themed";
+
+import fonts from "@/assets/fonts";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, router } from "expo-router";
 import { useEffect } from "react";
@@ -32,10 +34,35 @@ const theme = createTheme({
     Button: {
       buttonStyle: {
         borderRadius: 7,
-        padding: 10,
+        padding: 15,
         paddingHorizontal: 20,
       },
+      titleStyle: {
+        fontFamily: "UrbanistRegular",
+      },
     },
+    Text: {
+      style: {
+        fontFamily: "UrbanistRegular",
+      },
+      h1Style: {
+        fontFamily: "UrbanistBold",
+      },
+      h2Style: {
+        fontFamily: "UrbanistSemiBold",
+      },
+    },
+    Input: {
+      inputStyle: {
+        fontFamily: "UrbanistRegular",
+      },
+    },
+  },
+  fonts: {
+    regular: "UrbanistRegular",
+    bold: "UrbanistBold",
+    italic: "UrbanistItalic",
+    // ... add other font styles as needed
   },
 });
 
@@ -49,7 +76,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    ...fonts,
     ...FontAwesome.font,
   });
 
