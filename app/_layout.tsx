@@ -17,8 +17,9 @@ import { SplashScreen, Stack, router } from "expo-router";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { Platform } from "react-native";
-import { ApiProvider } from "@reduxjs/toolkit/dist/query/react";
-import { apiSlice } from "@/utils/redux/features/api/apiSlice";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const theme = createTheme({
   lightColors: {
@@ -79,12 +80,12 @@ function RootLayoutNav() {
       router.replace("/home");
     } else {
       router.replace("/welcome");
-    } 
+    }
   }, []); // Empty dependency array means this useEffect runs once after the initial render
 
   return (
     <Provider store={store}>
-      <ApiProvider api={apiSlice}>
+      <QueryClientProvider client={queryClient}>
         <ThemeProvider
           /* value={colorScheme === "dark" ? DarkTheme : DefaultTheme} */ theme={
             theme
@@ -97,7 +98,7 @@ function RootLayoutNav() {
             }}
           />
         </ThemeProvider>
-      </ApiProvider>
+      </QueryClientProvider>
     </Provider>
   );
 }
