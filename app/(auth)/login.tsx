@@ -1,4 +1,4 @@
-import { SafeAreaView, View } from "react-native";
+import { KeyboardAvoidingView, SafeAreaView, View } from "react-native";
 import React from "react";
 import { Link, router } from "expo-router";
 import { Button, Text, Input, Icon, useTheme, InputProps } from "@rneui/themed";
@@ -15,9 +15,6 @@ const LoginSchema = Yup.object().shape({
 
 const Login = () => {
   const dispatch = useDispatch();
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const inputRef = React.createRef<any>();
   const [showPassword, setShowPassword] = React.useState(false);
   const { theme } = useTheme();
 
@@ -57,12 +54,13 @@ const Login = () => {
           errors,
           isSubmitting,
         }) => (
-          <>
+          <KeyboardAvoidingView behavior="padding">
             <Text
               h2
               style={{
                 alignSelf: "center",
                 paddingHorizontal: 14,
+                marginBottom: 10,
               }}
             >
               Welcome back! Glad to see you, Again!
@@ -95,7 +93,6 @@ const Login = () => {
                 errorMessage={errors.email}
               />
               <Input
-                ref={inputRef}
                 leftIcon={
                   <Icon
                     name="lock"
@@ -161,7 +158,7 @@ const Login = () => {
                 </Text>
               </Link>
             </Text>
-          </>
+          </KeyboardAvoidingView>
         )}
       </Formik>
     </SafeAreaView>
