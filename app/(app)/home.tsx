@@ -3,8 +3,11 @@ import React from "react";
 import { Link } from "expo-router";
 import { Button, Text } from "@rneui/themed";
 import { Stack } from "@rneui/layout";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/utils/redux/features/user/userSlice";
 
 const Home = () => {
+  const user = useSelector(selectUser);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Stack
@@ -15,6 +18,8 @@ const Home = () => {
         }}
       >
         <Text h1>Home Screen</Text>
+        <Text h1>{JSON.stringify(user)}</Text>
+        <Text h2>Data</Text>
       </Stack>
     </SafeAreaView>
   );

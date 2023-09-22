@@ -1,15 +1,25 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+// import {
+//   DarkTheme,
+//   DefaultTheme,
+//   // ThemeProvider,
+// } from "@react-navigation/native";
+import { store } from "@/utils/redux/store";
+import { Provider } from "react-redux";
 import {
-  DarkTheme,
-  DefaultTheme,
-  // ThemeProvider,
-} from "@react-navigation/native";
-import { ThemeProvider, createTheme, lightColors,darkColors } from "@rneui/themed";
+  ThemeProvider,
+  createTheme,
+  lightColors,
+  darkColors,
+} from "@rneui/themed";
 import { useFonts } from "expo-font";
-import { Slot, SplashScreen, Stack, router } from "expo-router";
+import { SplashScreen, Stack, router } from "expo-router";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { Platform } from "react-native";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const theme = createTheme({
   lightColors: {
@@ -74,12 +84,21 @@ function RootLayoutNav() {
   }, []); // Empty dependency array means this useEffect runs once after the initial render
 
   return (
-    <ThemeProvider
-      /* value={colorScheme === "dark" ? DarkTheme : DefaultTheme} */ theme={
-        theme
-      }
-    >
-      <Slot />
-    </ThemeProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider
+          /* value={colorScheme === "dark" ? DarkTheme : DefaultTheme} */ theme={
+            theme
+          }
+        >
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              animation: "fade",
+            }}
+          />
+        </ThemeProvider>
+      </QueryClientProvider>
+    </Provider>
   );
 }
