@@ -15,6 +15,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { DrawerHeaderProps } from "@react-navigation/drawer";
 import themeColors from "@/assets/colors";
 import { BlurView } from "expo-blur";
+import { router } from "expo-router";
 
 const HomeHeader = ({
   navigation,
@@ -25,10 +26,10 @@ const HomeHeader = ({
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   const icons = [
-    <SchoolHat />,
-    <QuizIcon />,
-    <QRIcon increaseBy={-6} />,
-    <Coin />,
+    { component: <SchoolHat />, route: "/(app)/home/school" },
+    { component: <QuizIcon />, route: "/(app)/home/quiz" },
+    { component: <QRIcon increaseBy={-6} />, route: "/(app)/home/qr" },
+    { component: <Coin />, route: "/(app)/home/coin" },
   ];
   return (
     <View
@@ -150,8 +151,9 @@ const HomeHeader = ({
               alignItems: "center",
             }}
             key={index}
+            onPress={() => router.push(icon.route as never)}
           >
-            {icon}
+            {icon.component}
           </TouchableOpacity>
         ))}
       </View>

@@ -84,10 +84,10 @@ const Home = () => {
   return (
     <ScrollView
       contentContainerStyle={{
-        paddingTop: 230,
         paddingHorizontal: 20,
         gap: 20,
-        
+        paddingVertical: insets.top,
+
         // backgroundColor: themeColors.quaternaryShaded[100],
       }}
       scrollEventThrottle={16}

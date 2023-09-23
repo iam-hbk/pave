@@ -10,7 +10,7 @@ const Main = () => {
       <Stack.Screen
         name="index"
         options={{
-          title: "",
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -18,7 +18,7 @@ const Main = () => {
         options={{
           presentation: "modal",
           title: "Daily Question",
-          //   headerShown: false,
+          // headerShown: false,
         }}
       />
     </Stack>
