@@ -1,10 +1,54 @@
 import * as React from "react";
-import Svg, { Path } from "react-native-svg";
+import Svg, { Circle, Defs, G, Path, Text } from "react-native-svg";
 
 interface IconProps {
   color?: string;
   width?: number;
   height?: number;
+}
+
+export function ActivityIcon(props: IconProps) {
+  return (
+    <Svg width={65} height={65} {...props} viewBox="0 0 26 28">
+      <G
+        fill="none"
+        fillRule="evenodd"
+        stroke="#200E32"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        transform="translate(2 1.5)"
+      >
+        <Path d="m5.245 13.281 2.993-3.89 3.414 2.682 2.929-3.78" />
+        <Circle cx={17.995} cy={2.7} r={1.922} />
+        <Path d="M12.924 1.62H5.657C2.645 1.62.778 3.753.778 6.764v8.083c0 3.011 1.83 5.135 4.879 5.135h8.604c3.011 0 4.879-2.124 4.879-5.135v-7.04" />
+      </G>
+    </Svg>
+  );
+}
+
+export function PaveCoins(props: IconProps) {
+  return (
+    <Svg
+      //xmlns="http://www.w3.org/2000/svg"
+      width={65}
+      height={65}
+      fill="none"
+      {...props}
+    >
+      <Circle cx={32.5} cy={32.5} r={32.5} fill="#FFEDB0" />
+      <Circle cx={32.5} cy={32.5} r={27.5} fill="#FFC501" />
+      <G filter="url(#a)">
+        <Path stroke="#FFEDB0" strokeWidth={3} d="M32.637 16v5.454" />
+        <Path
+          fill="#FFEDB0"
+          d="M40 38.16H25v4.43h15v-4.43ZM40 29.977H25v4.432h15v-4.432ZM40 21.455H25v4.431h15v-4.431Z"
+        />
+        <Path stroke="#FFEDB0" strokeWidth={3} d="M32.637 42.591v5.454" />
+      </G>
+      <Defs></Defs>
+    </Svg>
+  );
 }
 
 export function HomeOutlined(props: IconProps) {

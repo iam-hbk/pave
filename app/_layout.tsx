@@ -43,7 +43,7 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   // Get this from the local storage to check if the user is logged in or not.
-  const isLoggedIn = false; // Replace this with actual logic
+  const isLoggedIn = true; // Replace this with actual logic
   useEffect(() => {
     if (isLoggedIn) {
       router.replace("/home");
