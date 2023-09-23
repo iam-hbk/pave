@@ -9,6 +9,7 @@ import { SplashScreen, Stack, router } from "expo-router";
 import { useEffect } from "react";
 import theme from "@/assets/theme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -55,6 +56,7 @@ function RootLayoutNav() {
 
   return (
     <Provider store={store}>
+      <StatusBar style="dark" />
       <ThemeProvider theme={theme}>
         <SafeAreaProvider>
           <Stack
