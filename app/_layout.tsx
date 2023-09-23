@@ -8,6 +8,7 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack, router } from "expo-router";
 import { useEffect } from "react";
 import theme from "@/assets/theme";
+import { StatusBar } from "expo-status-bar";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -54,6 +55,7 @@ function RootLayoutNav() {
 
   return (
     <Provider store={store}>
+      <StatusBar style="dark" />
       <ThemeProvider theme={theme}>
         <Stack
           screenOptions={{

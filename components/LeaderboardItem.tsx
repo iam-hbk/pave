@@ -20,7 +20,7 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
       <ListItem.Content style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={{ marginRight: 10 }}>#{rank}</Text>
         <Avatar source={{ uri: avatarUrl }} rounded />
-        <ListItem.Content>
+        <ListItem.Content style={{padding:5}} >
           <ListItem.Title>{name}</ListItem.Title>
         </ListItem.Content>
       </ListItem.Content>
