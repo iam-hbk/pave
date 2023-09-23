@@ -10,11 +10,6 @@ const Auth = () => {
   const insets = useSafeAreaInsets();
 
   return (
-    // <Stack
-    //   screenOptions={{
-    //     headerShown: false,
-    //   }}
-    // ></Stack>
     <Drawer
       screenOptions={{
         headerBackground: () => (
@@ -29,42 +24,13 @@ const Auth = () => {
       }}
     >
       <Drawer.Screen
-        name="index"
+        name="main"
         options={{
           title: "Home",
-          headerTitle: () => null,
-          // drawerIcon(props) {
-          //   console.log("DR:", props);
-          //   return <Text {...props}>Hello</Text>;
-          // },
-
-          headerRight: () => (
-            <View
-              style={{
-                backgroundColor: "#ffffff50",
-                height: 100,
-                borderWidth: 1,
-                flexDirection: "row",
-                // Paddings to handle safe area
-                paddingTop: insets.top,
-                paddingBottom: insets.bottom,
-                paddingLeft: insets.left,
-                paddingRight: insets.right,
-              }}
-            >
-              <View
-                style={{
-                  borderWidth: 1,
-                  marginHorizontal: 20,
-                }}
-              >
-              </View>
-              <Text h3>10</Text>
-            </View>
-          ),
-          header:(props)=><HomeHeader {...props} />
+          header: (props) => <HomeHeader {...props} />,
         }}
       />
+      
     </Drawer>
   );
 };

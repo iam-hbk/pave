@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { Text, useTheme } from "@rneui/themed";
+import { Input, Text, useTheme } from "@rneui/themed";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
@@ -14,8 +14,14 @@ import {
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { DrawerHeaderProps } from "@react-navigation/drawer";
 import themeColors from "@/assets/colors";
+import { BlurView } from "expo-blur";
 
-const HomeHeader = ({ navigation, route, options }: DrawerHeaderProps) => {
+const HomeHeader = ({
+  navigation,
+  route,
+  options,
+  layout,
+}: DrawerHeaderProps) => {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   const icons = [
@@ -24,15 +30,29 @@ const HomeHeader = ({ navigation, route, options }: DrawerHeaderProps) => {
     <QRIcon increaseBy={-6} />,
     <Coin />,
   ];
-  //   console.log("HomeHeader:", props);
   return (
     <View
+      // intensity={100}
       style={{
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
         paddingLeft: insets.left + 18,
         paddingRight: insets.right + 18,
         gap: 10,
+        height: 300,
+        // borderWidth: 1,
+        backgroundColor: themeColors.white,
+
+        // iOS shadow properties
+        shadowColor: "#dadada",
+        shadowOffset: { width: -1, height: 4 },
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+
+        // Android shadow properties
+        elevation: 5,
+        borderBottomRightRadius: 30,
+        borderBottomLeftRadius: 30,
       }}
     >
       <View
@@ -40,6 +60,8 @@ const HomeHeader = ({ navigation, route, options }: DrawerHeaderProps) => {
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
+          // paddingTop: 20,
+          paddingHorizontal: 8,
         }}
       >
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
@@ -57,9 +79,16 @@ const HomeHeader = ({ navigation, route, options }: DrawerHeaderProps) => {
 
             // Android shadow properties
             elevation: 5,
+
+            // borderWidth: 1,
+            // borderColor: themeColors.grey0,
+            // paddingVertical: 5,
+            // paddingHorizontal: 10,
+            // gap: 20,
+            // borderRadius: 10,
           }}
         >
-          <GoldenCoin height={50} width={50} />
+          <GoldenCoin increaseBy={-10} />
           <View
             style={{
               backgroundColor: "#FFEDB0",
@@ -71,10 +100,18 @@ const HomeHeader = ({ navigation, route, options }: DrawerHeaderProps) => {
               paddingLeft: 35,
             }}
           >
-            <Text h4>3500</Text>
+            <Text
+              style={{
+                fontSize: 20,
+                color: theme.colors.grey3,
+              }}
+            >
+              3500
+            </Text>
           </View>
         </View>
       </View>
+
       <View
         style={{
           //   borderWidth: 1,
