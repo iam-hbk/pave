@@ -1,7 +1,15 @@
 import { SafeAreaView, StyleSheet, View, ScrollView } from "react-native";
 import React from "react";
 import { Link, router } from "expo-router";
-import { Button, Avatar, Text, useTheme, ButtonGroup } from "@rneui/themed";
+import {
+  Button,
+  Avatar,
+  Text,
+  useTheme,
+  ButtonGroup,
+  Card,
+  LinearProgress,
+} from "@rneui/themed";
 import { Stack } from "@rneui/layout";
 import { selectUser, unSetUser } from "@/utils/redux/features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -198,6 +206,7 @@ const Profile = () => {
         flex: 1,
         marginVertical: 30,
         marginHorizontal: 15,
+        // backgroundColor:'white'
       }}
     >
       <ScrollView>
@@ -216,8 +225,10 @@ const Profile = () => {
         {/* stack 2 -  user stats */}
         <Stack
           style={{
-            margin: 0,
-            paddingVertical: 20,
+            backgroundColor: "white",
+            margin: 5,
+            paddingVertical: 15,
+            borderRadius: 10,
           }}
           row
           justify="space-around"
@@ -298,11 +309,17 @@ const Profile = () => {
               ))}
         </ScrollView>
         {/* stack 4 - achievement */}
-        <Stack>
-          <Text h4 h4Style={{ marginVertical: 15 }}>
-            Achievements
-          </Text>
-        </Stack>
+        <Text h4 h4Style={{ marginVertical: 7 }}>
+          Achievements
+        </Text>
+        {/* <Stack justify="center" align="center"> */}
+        <Card>
+          <Card.Title>Pave Boss</Card.Title>
+          <Text>Complete 100 activities</Text>
+          <LinearProgress value={0.5} />
+          <Card.Divider />
+        </Card>
+        {/* </Stack>/ */}
 
         {/* <Button onPress={() => handleLogout()}>Logout</Button> */}
       </ScrollView>
