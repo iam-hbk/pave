@@ -140,7 +140,6 @@ const Home = () => {
       <View
         style={{
           borderRadius: 10,
-          backgroundColor: themeColors.quaternaryShaded[200],
           paddingHorizontal: 20,
         }}
       >
