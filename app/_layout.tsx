@@ -8,6 +8,7 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack, router } from "expo-router";
 import { useEffect } from "react";
 import theme from "@/assets/theme";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -43,7 +44,7 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   // Get this from the local storage to check if the user is logged in or not.
-  const isLoggedIn = false; // Replace this with actual logic
+  const isLoggedIn = true; // Replace this with actual logic
   useEffect(() => {
     if (isLoggedIn) {
       router.replace("/home");
@@ -55,12 +56,14 @@ function RootLayoutNav() {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            animation: "fade",
-          }}
-        />
+        <SafeAreaProvider>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              animation: "fade",
+            }}
+          />
+        </SafeAreaProvider>
       </ThemeProvider>
     </Provider>
   );

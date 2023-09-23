@@ -3,18 +3,59 @@ const themeColors = {
   primary: "#F9423A",
   primaryLight: "#FC6B64",
   primaryDark: "#E01A20",
-
+  primaryShaded: {
+    100: "#FFEBEB",
+    200: "#FFC9C9",
+    300: "#FFA8A8",
+    400: "#FF8686",
+    500: "#F9423A", // Original color
+    600: "#E02E2E",
+    700: "#C81F1F",
+    800: "#B01010",
+    900: "#990000",
+  },
   secondary: "#4E018F",
   secondaryLight: "#711ABF",
   secondaryDark: "#3C006B",
-
+  secondaryShaded: {
+    100: "#E2D4F0",
+    200: "#C6A9E1",
+    300: "#AA7ED2",
+    400: "#8E53C3",
+    500: "#4E018F", // Original color
+    600: "#3E017A",
+    700: "#2E0165",
+    800: "#1E0150",
+    900: "#0E013B",
+  },
   tertiary: "#FFC501",
   tertiaryLight: "#FFD634",
   tertiaryDark: "#E5B100",
-
+  tertiaryShaded: {
+    100: "#FFF7D4",
+    200: "#FFEFAB",
+    300: "#FFE681",
+    400: "#FFDE58",
+    500: "#FFC501", // Original color
+    600: "#E5B000",
+    700: "#CC9B00",
+    800: "#B28600",
+    900: "#997100",
+  },
   quaternary: "#5B88D9",
   quaternaryLight: "#7CA0E6",
   quaternaryDark: "#4071BC",
+  quaternaryShaded: {
+    100: "#D9E6F7",
+    200: "#B3CDEF",
+    300: "#8DB4E7",
+    400: "#679BDF",
+    500: "#5B88D9", // Original color
+    600: "#4F7CC4",
+    700: "#436FAF",
+    800: "#37529A",
+    900: "#2C3585",
+  },
 
   primaryButtonBackground: "#1E232C",
 

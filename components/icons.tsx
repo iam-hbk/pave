@@ -1,10 +1,15 @@
 import * as React from "react";
-import Svg, { Path } from "react-native-svg";
+import Svg, { Circle, ClipPath, Defs, G, Path } from "react-native-svg";
 
 interface IconProps {
   color?: string;
   width?: number;
   height?: number;
+}
+interface RatioIconProps {
+  increaseBy?: number;
+  color?: string;
+  textColor?: string;
 }
 
 export function HomeOutlined(props: IconProps) {
@@ -28,8 +33,8 @@ export function HomeOutlined(props: IconProps) {
 export function HomeFilled(props: IconProps) {
   return (
     <Svg
-      width={props.width ?? 26}
-      height={props.height ?? 28}
+      width={props.width || 26}
+      height={props.height || 28}
       viewBox="0 0 26 28"
       fill="none"
     >
@@ -67,6 +72,130 @@ export function UserOutlined(props: IconProps) {
         d="M17.857 6.857a5.857 5.857 0 11-11.714 0 5.857 5.857 0 1111.714 0zM12 17.286c1.463 0 2.857-.31 4.118-.857h.682c3.423 0 6.2 2.777 6.2 6.2v2.228c0 .867-.704 1.572-1.571 1.572H2.57A1.572 1.572 0 011 24.857V22.63c0-3.423 2.777-6.2 6.2-6.2h.682a10.34 10.34 0 004.118.857z"
         stroke={props.color ?? "#26395B"}
         strokeWidth={2}
+      />
+    </Svg>
+  );
+}
+
+export function HambergerMenu(props: IconProps) {
+  return (
+    <Svg
+      width={props.width || 25}
+      height={props.height || 17}
+      viewBox="0 0 25 17"
+      fill="none"
+    >
+      <Path
+        d="M0 15.278c0 .767.622 1.389 1.389 1.389H21.61a1.389 1.389 0 100-2.778H1.39C.622 13.889 0 14.51 0 15.278zm0-6.945c0 .767.622 1.39 1.389 1.39H14.61a1.389 1.389 0 100-2.778H1.39C.622 6.944 0 7.565 0 8.332zM1.389 0a1.389 1.389 0 100 2.778H23.61a1.389 1.389 0 100-2.778H1.39z"
+        fill={props.color || "#26395B"}
+      />
+    </Svg>
+  );
+}
+
+export function Coin({ increaseBy = 0, color }: RatioIconProps) {
+  return (
+    <Svg
+      width={23 + increaseBy}
+      height={41 + increaseBy}
+      viewBox="0 0 23 41"
+      fill="none"
+    >
+      <G filter="url(#filter0_d_246_186)">
+        <Path
+          d="M19 25.16H4v4.43h15v-4.43zM19 16.977H4v4.432h15v-4.432zM19 8.455H4v4.431h15V8.455z"
+          fill={color || "#26395B"}
+        />
+        <Path
+          stroke={color || "#26395B"}
+          strokeWidth={3}
+          d="M11.6366 3L11.6366 8.45454"
+        />
+        <Path
+          stroke={color || "#26395B"}
+          strokeWidth={3}
+          d="M11.6366 3L11.6366 8.45454"
+        />
+        <Path
+          stroke={color || "#26395B"}
+          strokeWidth={3}
+          d="M11.6366 29.5909L11.6366 35.0455"
+        />
+      </G>
+      <Defs></Defs>
+    </Svg>
+  );
+}
+export function QRIcon({ increaseBy = 0, color }: RatioIconProps) {
+  return (
+    <Svg
+      width={33 + increaseBy}
+      height={33 + increaseBy}
+      viewBox="0 0 33 33"
+      fill="none"
+    >
+      <Path
+        d="M0 13.667a1 1 0 001 1h12.667a1 1 0 001-1V1a1 1 0 00-1-1H1a1 1 0 00-1 1v12.667zm3.667-9a1 1 0 011-1H10a1 1 0 011 1V10a1 1 0 01-1 1H4.667a1 1 0 01-1-1V4.667zM0 32a1 1 0 001 1h12.667a1 1 0 001-1V19.333a1 1 0 00-1-1H1a1 1 0 00-1 1V32zm3.667-9a1 1 0 011-1H10a1 1 0 011 1v5.333a1 1 0 01-1 1H4.667a1 1 0 01-1-1V23zM19.334 0a1 1 0 00-1 1v12.667a1 1 0 001 1H32a1 1 0 001-1V1a1 1 0 00-1-1H19.334zm10 10a1 1 0 01-1 1H23a1 1 0 01-1-1V4.667a1 1 0 011-1h5.334a1 1 0 011 1V10zM32.999 29.333h-3.667V33H33v-3.667zM22 18.333h-3.666V22H22v-3.667zM25.667 22h-3.666v3.667h3.666V22zM22 25.667h-3.666v3.666H22v-3.666zM25.667 29.333h-3.666V33h3.666v-3.667z"
+        fill={color || "#26395B"}
+      />
+      <Path
+        d="M29.333 25.667h-3.667v3.666h3.667v-3.666zM29.333 18.333h-3.667V22h3.667v-3.667zM32.999 22h-3.667v3.667H33V22z"
+        fill={color || "#26395B"}
+      />
+    </Svg>
+  );
+}
+export function QuizIcon({ increaseBy = 0, color, textColor }: RatioIconProps) {
+  return (
+    <Svg
+      width={32 + increaseBy}
+      height={29 + increaseBy}
+      viewBox="0 0 32 29"
+      fill="none"
+    >
+      <Path
+        d="M11.688 0H2.982A2.982 2.982 0 000 2.982v7.416a2.982 2.982 0 002.982 2.982h8.706a2.982 2.982 0 002.982-2.982V2.982A2.982 2.982 0 0011.688 0z"
+        fill={color || "#26395B"}
+      />
+      <Path
+        d="M8.968 9.84l-.9-.973a2.622 2.622 0 01-.729.096c-.476 0-.916-.11-1.319-.332a2.554 2.554 0 01-.95-.936 2.677 2.677 0 01-.346-1.356c0-.5.115-.95.346-1.348a2.5 2.5 0 01.95-.928 2.65 2.65 0 011.32-.34c.48 0 .92.114 1.318.34.403.22.72.53.95.928.232.398.347.847.347 1.348 0 .472-.103.9-.31 1.283a2.424 2.424 0 01-.84.913l1.231 1.304H8.968zm-3.382-3.5c0 .378.073.712.22 1.002.153.284.362.506.627.663.265.152.567.228.906.228.34 0 .641-.076.907-.228.265-.157.471-.379.619-.663.152-.29.228-.624.228-1.003 0-.378-.076-.71-.228-.994a1.566 1.566 0 00-.62-.656 1.788 1.788 0 00-.906-.228c-.339 0-.64.076-.906.228-.265.152-.474.37-.626.656a2.136 2.136 0 00-.221.994z"
+        fill={textColor || "#CCDAF3"}
+      />
+      <Path
+        d="M11.688 15.38H2.982A2.982 2.982 0 000 18.363v7.415a2.982 2.982 0 002.982 2.983h8.706a2.982 2.982 0 002.982-2.983v-7.415a2.982 2.982 0 00-2.982-2.983z"
+        fill={color || "#26395B"}
+      />
+      <Path d="M7.84 19.38v5.121H7v-5.12h.84z" fill={textColor || "#CCDAF3"} />
+      <Path
+        d="M28.358 15.38h-8.706a2.982 2.982 0 00-2.982 2.983v7.415a2.982 2.982 0 002.982 2.983h8.706a2.982 2.982 0 002.982-2.983v-7.415a2.982 2.982 0 00-2.982-2.983z"
+        fill={color || "#26395B"}
+      />
+      <Path
+        d="M23.665 23.772h2.38v.73H22.67v-.656l2.373-3.736H22.67v-.73h3.375v.656l-2.38 3.736z"
+        fill={textColor || "#CCDAF3"}
+      />
+      <Path
+        d="M28.358 0h-8.706a2.982 2.982 0 00-2.982 2.982v7.416a2.982 2.982 0 002.982 2.982h8.706a2.982 2.982 0 002.982-2.982V2.982A2.982 2.982 0 0028.358 0z"
+        fill={color || "#26395B"}
+      />
+      <Path
+        d="M22.51 4v3.264c0 .388.1.68.302.877.206.197.491.295.855.295.368 0 .653-.098.855-.295.206-.196.31-.489.31-.877V4h.84v3.25c0 .417-.092.77-.274 1.06-.181.29-.424.506-.729.649a2.353 2.353 0 01-1.01.214c-.368 0-.704-.072-1.009-.214a1.656 1.656 0 01-.715-.648c-.176-.29-.265-.644-.265-1.062V4h.84z"
+        fill={textColor || "#CCDAF3"}
+      />
+    </Svg>
+  );
+}
+export function SchoolHat({ increaseBy = 0, color }: RatioIconProps) {
+  return (
+    <Svg
+      width={30 + increaseBy}
+      height={33 + increaseBy}
+      viewBox="0 0 30 33"
+      fill="none"
+    >
+      <Path
+        d="M15 4.308L1.25 12.506 15 20.703l11.25-6.708v9.441h2.5v-10.93m-22.5 5.71v5.466l8.75 5.22 8.75-5.22v-5.465L15 23.436l-8.75-5.22z"
+        fill={color || "#26395B"}
       />
     </Svg>
   );
@@ -346,6 +475,78 @@ export function OTPBlob() {
         d="M60.206 64.333L42.176 48.88a4.136 4.136 0 015.376-6.286l11.815 10.138 20.25-23.028a4.136 4.136 0 016.216 5.459L60.206 64.333z"
         fill="#fff"
       />
+    </Svg>
+  );
+}
+
+export function GoldenCoin(props: IconProps) {
+  return (
+    <Svg
+      width={props.width || 65}
+      height={props.height || 65}
+      viewBox="0 0 65 65"
+      fill="none"
+    >
+      <Circle cx={32.5} cy={32.5} r={32.5} fill="#FFEDB0" />
+      <Circle cx={32.5} cy={32.5} r={27.5} fill="#FFC501" />
+      <G filter="url(#filter0_d_169_213)">
+        <Path
+          stroke="#FFEDB0"
+          strokeWidth={3}
+          d="M32.6366 16L32.6366 21.4545"
+        />
+        <Path
+          d="M40 38.16H25v4.43h15v-4.43zM40 29.977H25v4.432h15v-4.432zM40 21.455H25v4.431h15v-4.431z"
+          fill="#FFEDB0"
+        />
+        <Path
+          stroke="#FFEDB0"
+          strokeWidth={3}
+          d="M32.6366 42.5909L32.6366 48.0455"
+        />
+      </G>
+      <Defs></Defs>
+    </Svg>
+  );
+}
+
+export function Logo({ increaseBy = 0 }: RatioIconProps) {
+  /**
+   * increaseBy is a number that will increase the size of the logo
+   * @param {number} increaseBy - The number to increase the size of the logo by can be negative.
+   */
+  return (
+    <Svg
+      width={132 + increaseBy}
+      height={37 + increaseBy}
+      viewBox="0 0 132 37"
+      fill="none"
+    >
+      <G clipPath="url(#clip0_317_56)">
+        <Path d="M83.5 35l4-7.5-13-25H67L83.5 35z" fill="#4E018F" />
+        <Path d="M83.5 35l4-7.5-13-25H67L83.5 35z" stroke="#4E018F" />
+        <Path d="M131 27.5h-22V34h22v-6.5z" fill="#4E018F" />
+        <Path d="M131 27.5h-22V34h22v-6.5z" stroke="#4E018F" />
+        <Path d="M131 15.5h-22V22h22v-6.5z" fill="#F9423A" stroke="#F9423A" />
+        <Path d="M131 3h-22v6.5h22V3z" fill="#FFC501" stroke="#FFC501" />
+        <Path d="M90 19l9-16.5h7L97.5 19H90z" fill="#5B88D9" />
+        <Path d="M90 19l9-16.5h7L97.5 19H90z" stroke="#5B88D9" />
+        <Path
+          d="M47.5 2L31 34h8l9-17 8.5 17H64L47.5 2z"
+          fill="#F9423A"
+          stroke="#F9423A"
+        />
+        <Path
+          d="M1 10V3h18.5c5.55 0 9.127 5.451 9 11-.124 5.4-3.6 10.5-9 10.5H8v10H1v-17h17c1.8 0 2.883-1.704 3-3.5.127-1.948-1.047-4-3-4H1z"
+          fill="#FFC501"
+          stroke="#FFC501"
+        />
+      </G>
+      <Defs>
+        <ClipPath id="clip0_317_56">
+          <Path fill="#fff" d="M0 0H132V37H0z" />
+        </ClipPath>
+      </Defs>
     </Svg>
   );
 }
