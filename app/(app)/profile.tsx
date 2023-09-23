@@ -56,6 +56,14 @@ const Profile = () => {
       avatarUrl:
         "https://images.unsplash.com/photo-1517849845537-4d257902454a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1635&q=80",
     },
+    {
+      id: 3,
+      rank: 2,
+      name: "Someone",
+      score: 450,
+      avatarUrl:
+        "https://images.unsplash.com/photo-1517849845537-4d257902454a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1635&q=80",
+    },
 
     // ... more data
   ];
@@ -85,7 +93,8 @@ const Profile = () => {
       <Stack
         style={{
           flex: 3,
-
+            margin:0,
+            padding:0,
           // backgroundColor: "lightpink",
         }}
         row
