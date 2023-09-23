@@ -21,3 +21,8 @@ export type User = {
     bs: string;
   };
 };
+export type RegisterProps = {
+  email: string;
+  password: string;
+  username: string;
+};

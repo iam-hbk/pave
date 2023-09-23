@@ -1,43 +1,13 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-// import {
-//   DarkTheme,
-//   DefaultTheme,
-//   // ThemeProvider,
-// } from "@react-navigation/native";
 import { store } from "@/utils/redux/store";
 import { Provider } from "react-redux";
-import {
-  ThemeProvider,
-  createTheme,
-  lightColors,
-  darkColors,
-} from "@rneui/themed";
+import { ThemeProvider } from "@rneui/themed";
+
+import fonts from "@/assets/fonts";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, router } from "expo-router";
 import { useEffect } from "react";
-import { useColorScheme } from "react-native";
-import { Platform } from "react-native";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-const queryClient = new QueryClient();
-
-const theme = createTheme({
-  lightColors: {
-    ...Platform.select({
-      default: darkColors.platform.android,
-      // ios: lightColors.platform.ios,
-    }),
-  },
-  components: {
-    Button: {
-      buttonStyle: {
-        borderRadius: 7,
-        padding: 10,
-        paddingHorizontal: 20,
-      },
-    },
-  },
-});
+import theme from "@/assets/theme";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -49,7 +19,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    ...fonts,
     ...FontAwesome.font,
   });
 
@@ -72,7 +42,6 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
   // Get this from the local storage to check if the user is logged in or not.
   const isLoggedIn = false; // Replace this with actual logic
   useEffect(() => {
@@ -85,20 +54,14 @@ function RootLayoutNav() {
 
   return (
     <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider
-          /* value={colorScheme === "dark" ? DarkTheme : DefaultTheme} */ theme={
-            theme
-          }
-        >
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              animation: "fade",
-            }}
-          />
-        </ThemeProvider>
-      </QueryClientProvider>
+      <ThemeProvider theme={theme}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+      </ThemeProvider>
     </Provider>
   );
 }
