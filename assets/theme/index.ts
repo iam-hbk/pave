@@ -28,6 +28,10 @@ const theme = createTheme({
       h2Style: {
         fontFamily: "UrbanistSemiBold",
       },
+      h4Style: {
+        fontFamily: "UrbanistSemiBold",
+        fontSize: 16,
+      },
     },
     Input: {
       inputStyle: {

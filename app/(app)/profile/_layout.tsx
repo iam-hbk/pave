@@ -1,7 +1,7 @@
 import React from "react";
 import { Stack } from "expo-router";
 
-const Auth = () => {
+const Profile = () => {
   return (
     <Stack
       screenOptions={{
@@ -11,4 +11,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default Profile;

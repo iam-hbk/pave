@@ -4,7 +4,7 @@ import { Link, router } from "expo-router";
 import { Button, Text, Input, Icon, useTheme, InputProps } from "@rneui/themed";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/utils/redux/features/user/userSlice";
-import { loginUser, verifyUser } from "@/utils/api/user";
+import { loginUser, verifyUser } from "@/utils/redux/features/user/user";
 
 import { Formik } from "formik";
 import * as Yup from "yup";
