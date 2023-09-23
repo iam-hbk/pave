@@ -71,32 +71,36 @@ const DailyQuestion = () => {
             >
               <ListItem
                 containerStyle={{
-                  backgroundColor: themeColors.quaternaryShaded[300],
+                  // backgroundColor: themeColors.quaternaryShaded[300],
                   borderRadius: 10,
                   padding: 20,
                   marginBottom: 10,
                 }}
               >
                 <ListItem.Content
-                  style={{
-                    backgroundColor: themeColors.quaternaryShaded[300],
-                  }}
+                  style={
+                    {
+                      // backgroundColor: themeColors.quaternaryShaded[300],
+                    }
+                  }
                 >
                   <ListItem.Title
                     style={{
                       fontFamily: "UrbanistMedium",
                       fontSize: 20,
-                      color: themeColors.quaternaryShaded[900],
+                      // color: themeColors.quaternaryShaded[900],
                     }}
                   >
                     {option}
                   </ListItem.Title>
                 </ListItem.Content>
                 <ListItem.CheckBox
-                  containerStyle={{
-                    backgroundColor: themeColors.quaternaryShaded[300],
-                  }}
-                  uncheckedColor="white"
+                  containerStyle={
+                    {
+                      // backgroundColor: themeColors.quaternaryShaded[300],
+                    }
+                  }
+                  uncheckedColor={themeColors.quaternaryShaded[900]}
                   // Use ThemeProvider to change the defaults of the checkbox
                   iconType="material-community"
                   checkedIcon="checkbox-marked"
