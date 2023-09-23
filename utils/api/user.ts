@@ -15,7 +15,7 @@ export async function loginUser(userEmail: string): Promise<User> {
   }
 }
 
-export async function RegisterUser({
+export async function registerUser({
   username,
   email,
   password,
@@ -46,6 +46,15 @@ export async function RegisterUser({
           bs: "e-enable strategic applications",
         },
       };
+      resolve(res);
+    }, 3000);
+  });
+}
+
+export async function verifyUser(email: string): Promise<{ code: string }> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const res: { code: string } = { code: "1234" };
       resolve(res);
     }, 3000);
   });

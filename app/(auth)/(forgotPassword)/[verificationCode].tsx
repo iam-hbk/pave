@@ -8,25 +8,26 @@ import { loginUser } from "@/utils/api/user";
 
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { ForgotPasswordBlob } from "@/components/icons";
+import { OTPBlob } from "@/components/icons";
+import { useLocalSearchParams } from "expo-router";
+import { useFocusEffect } from "expo-router";
 const LoginSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Email is required"),
-  password: Yup.string().required("Password is required"),
+  code: Yup.string().required("Code is required"),
 });
 
-const ForgotPassword = () => {
+const CodeVerification = () => {
   const dispatch = useDispatch();
-  const [showPassword, setShowPassword] = React.useState(false);
+  const params = useLocalSearchParams<{ verificationCode: string }>();
+  //   const { verificationCode } = useLocalSearchParams();
   const { theme } = useTheme();
 
-  const handleLogin = async (values: { email: string; password: string }) => {
-    const result = await loginUser(values.email);
+  console.log("CODE PARAMS: ", params);
 
-    if (result instanceof Error) {
-      console.log("Error logging in:", result.message);
+  const handleLogin = async (values: { code: string }) => {
+    if (params.verificationCode !== values.code) {
+      console.log("Error logging in:", "Invalid code");
     } else {
-      dispatch(setUser(result));
-      router.replace("/(app)/home");
+      router.replace("/(auth)/login");
     }
   };
 
@@ -39,7 +40,7 @@ const ForgotPassword = () => {
       }}
     >
       <Formik
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ code: "" }}
         validationSchema={LoginSchema}
         onSubmit={handleLogin}
       >
@@ -65,10 +66,16 @@ const ForgotPassword = () => {
                 marginVertical: 20,
               }}
             >
-              Forgot Password?
+              OTP Verification
             </Text>
 
-            <ForgotPasswordBlob />
+            <View
+              style={{
+                margin: 60,
+              }}
+            >
+              <OTPBlob />
+            </View>
 
             <Text
               style={{
@@ -78,8 +85,7 @@ const ForgotPassword = () => {
                 fontSize: 20,
               }}
             >
-              Don't worry! It occurs. Please enter the email address linked with
-              your account.
+              Enter the verification code we just sent on your email address.
             </Text>
             <View
               style={{
@@ -91,22 +97,11 @@ const ForgotPassword = () => {
               }}
             >
               <Input
-                leftIcon={
-                  <Icon
-                    name="email"
-                    size={25}
-                    color={"#8391A1"}
-                    style={{
-                      marginRight: 15,
-                    }}
-                  />
-                }
-                placeholder="Enter your student email"
-                keyboardType="email-address"
-                onChangeText={handleChange("email")}
-                onBlur={handleBlur("email")}
-                value={values.email}
-                errorMessage={errors.email}
+                keyboardType="numeric"
+                onChangeText={handleChange("code")}
+                onBlur={handleBlur("code")}
+                value={values.code}
+                errorMessage={errors.code}
               />
 
               <Button
@@ -115,7 +110,7 @@ const ForgotPassword = () => {
                 }}
                 disabled={isSubmitting}
                 loading={isSubmitting}
-                title={"Send Code"}
+                title={"Verify"}
                 onPress={() => handleSubmit()}
               />
             </View>
@@ -126,9 +121,9 @@ const ForgotPassword = () => {
                 margin: 10,
               }}
             >
-              Remember Password?{" "}
+              Didn’t received code?{" "}
               <Link href={"/(auth)/login"} asChild>
-                <Text style={{ color: theme.colors.primary }}>Login Now</Text>
+                <Text style={{ color: theme.colors.primary }}>Resend</Text>
               </Link>
             </Text>
           </KeyboardAvoidingView>
@@ -138,4 +133,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default CodeVerification;

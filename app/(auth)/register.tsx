@@ -4,7 +4,7 @@ import { Link, router } from "expo-router";
 import { Button, Text, Input, Icon, useTheme, InputProps } from "@rneui/themed";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/utils/redux/features/user/userSlice";
-import { RegisterUser, loginUser } from "@/utils/api/user";
+import { registerUser, loginUser } from "@/utils/api/user";
 import { EvilIcons, Ionicons } from "@expo/vector-icons";
 
 import { Formik } from "formik";
@@ -20,7 +20,6 @@ const LoginSchema = Yup.object().shape({
     .required("Confirm Password is required"),
 });
 
-
 const Register = () => {
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
@@ -29,7 +28,7 @@ const Register = () => {
   const handleLogin = async (values: RegisterProps) => {
     console.log(values);
 
-    const result = await RegisterUser(values);
+    const result = await registerUser(values);
 
     if (result instanceof Error) {
       console.log("Error logging in:", result.message);
