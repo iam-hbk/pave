@@ -7,11 +7,10 @@ const QR = () => {
     <View
       style={{
         flex: 1,
-        justifyContent: "center",
         alignItems: "center",
       }}
     >
-      <Text h1>QR</Text>
+      <Text h1>Scan the QR code given by the lecturer</Text>
     </View>
   );
 };
