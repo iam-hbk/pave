@@ -1,8 +1,9 @@
 import { View, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Text } from "@rneui/themed";
+import { Text, Button } from "@rneui/themed";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Dimensions } from "react-native";
+import { router } from "expo-router";
 // const barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
 
 const QR = () => {
@@ -17,11 +18,22 @@ const QR = () => {
     };
 
     getBarCodeScannerPermissions();
-  }, []);
+  }, [hasPermission]);
 
-  const handleBarCodeScanned = ({ type, data }: { type: string; data: {} }) => {
-    setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+  const handleBarCodeScanned = ({
+    type,
+    data,
+  }: {
+    type: string;
+    data: any;
+  }) => {
+    data = "ATDR24534";
+    setScanned(true); //to pause the scanner after scanning once
+    //TODO: Add logic to check if the QR code is valid
+    //The scanned data will be the ID of the class going on. always starts with a "ATDR"
+    //TODO: Use this package https://next-qrcode.js.org/demo on the website to generate QR codes
+
+    router.push(`/(app)/home/qr/${data}`);
   };
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
@@ -34,6 +46,7 @@ const QR = () => {
       style={{
         flex: 1,
         alignItems: "center",
+        padding: 20,
       }}
     >
       <Text
@@ -48,13 +61,25 @@ const QR = () => {
       <View
         style={{
           flex: 1,
-          width: width,
+          width: "100%",
+          overflow: "hidden",
+          borderRadius: 10,
         }}
       >
-        <BarCodeScanner
-          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-          style={StyleSheet.absoluteFillObject}
-        />
+        {scanned ? (
+          <Button
+            style={{
+              margin: 20,
+            }}
+            title={"Scan Again"}
+            onPress={() => setScanned(false)}
+          />
+        ) : (
+          <BarCodeScanner
+            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            style={StyleSheet.absoluteFillObject}
+          />
+        )}
       </View>
     </View>
   );

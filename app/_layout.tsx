@@ -10,11 +10,15 @@ import { useEffect } from "react";
 import theme from "@/assets/theme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from "expo-router";
+
+// Create a client
+const queryClient = new QueryClient();
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -56,17 +60,19 @@ function RootLayoutNav() {
 
   return (
     <Provider store={store}>
-      <StatusBar style="dark" />
-      <ThemeProvider theme={theme}>
-        <SafeAreaProvider>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              animation: "fade",
-            }}
-          />
-        </SafeAreaProvider>
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <StatusBar style="dark" />
+        <ThemeProvider theme={theme}>
+          <SafeAreaProvider>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                animation: "fade",
+              }}
+            />
+          </SafeAreaProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
     </Provider>
   );
 }
