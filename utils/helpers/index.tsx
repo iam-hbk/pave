@@ -1,9 +1,11 @@
+import { format, addHours } from 'date-fns';
+
 interface Coordinate {
   lat: number;
   lng: number;
 }
 
-function getDistanceDifference(coord1: Coordinate, coord2: Coordinate) {
+export function getDistanceDifference(coord1: Coordinate, coord2: Coordinate) {
   // Radius of the Earth in meters
   const R = 6371000;
 
@@ -32,8 +34,7 @@ function getDistanceDifference(coord1: Coordinate, coord2: Coordinate) {
   return distance;
 }
 
-function formatDateToHHMM(date: Date): string {
-  const hours = date.getUTCHours().toString().padStart(2, "0");
-  const minutes = date.getUTCMinutes().toString().padStart(2, "0");
-  return `${hours}:${minutes}`;
+export function formatDateToHHMM(date: Date): string {
+  const adjustedDate = addHours(date, 2);
+  return format(date, 'HH:mm');
 }

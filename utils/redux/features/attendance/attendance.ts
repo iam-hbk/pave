@@ -21,8 +21,8 @@ export async function getClassInfo(
     moduleName: "Information System 3A",
     moduleCode: "IFS013A",
     lecturerName: "Dr. Fani Radebe",
-    classStartTime: "2023-09-25T09:00:00Z",
-    classEndTime: "2023-09-25T12:00:00Z",
+    classStartTime: "2023-09-25T13:00:00Z",
+    classEndTime: "2023-09-25T15:00:00Z",
   };
 
   // Simulate a delay (e.g., network request)
