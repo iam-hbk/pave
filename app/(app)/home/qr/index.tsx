@@ -40,7 +40,6 @@ const QR = () => {
         h3
         style={{
           textAlign: "center",
-
           margin: 20,
         }}
       >

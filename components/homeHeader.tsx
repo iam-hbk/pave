@@ -36,11 +36,11 @@ const HomeHeader = ({
       // intensity={100}
       style={{
         paddingTop: insets.top,
-        paddingBottom: insets.bottom,
+        paddingBottom: 20,
         paddingLeft: insets.left + 18,
         paddingRight: insets.right + 18,
         gap: 10,
-        height: 300,
+        // height: 300,
         // borderWidth: 1,
         backgroundColor: themeColors.white,
 

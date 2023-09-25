@@ -12,6 +12,7 @@ import { QuestionOfTheDayImage } from "@/components/icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { selectQuestions } from "@/utils/redux/features/questions/questionSlice";
 import { LinearProgress } from "@rneui/themed";
+import DailyQuestionModal from "@/components/dailyQuestionModal";
 
 interface Task {
   id: number;
@@ -52,6 +53,8 @@ const Home = () => {
   const [tasks, setTasks] = React.useState<Task[]>(TASKS);
   const questions = useSelector(selectQuestions);
   const router = useRouter();
+  const [isModalQuestionVisible, setIsModalQuestionVisible] =
+    React.useState<boolean>(false);
 
   function calculateOverallProgress(tasks: Task[]) {
     const totalTasks = tasks.length;
@@ -97,6 +100,11 @@ const Home = () => {
         paddingRight: insets.right,
       }}
     >
+      <DailyQuestionModal
+        isVisible={isModalQuestionVisible}
+        onClose={() => setIsModalQuestionVisible(false)}
+        dailyQuestionId={"2"}
+      />
       <TouchableOpacity
         style={styles.container}
         onPress={() => {
@@ -106,7 +114,7 @@ const Home = () => {
            * The one that will be displayed will be the one with the ID we send in the params
            */
           let id = "2";
-          router.push(`/(app)/home/main/${id}`);
+          setIsModalQuestionVisible(true);
         }}
       >
         <LinearGradient
