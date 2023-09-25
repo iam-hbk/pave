@@ -2,7 +2,7 @@ import { format, addHours } from 'date-fns';
 
 interface Coordinate {
   lat: number;
-  lng: number;
+  long: number;
 }
 
 export function getDistanceDifference(coord1: Coordinate, coord2: Coordinate) {
@@ -14,9 +14,9 @@ export function getDistanceDifference(coord1: Coordinate, coord2: Coordinate) {
 
   // Convert latitude and longitude from degrees to radians
   const lat1 = degToRad(coord1.lat);
-  const lon1 = degToRad(coord1.lng);
+  const lon1 = degToRad(coord1.long);
   const lat2 = degToRad(coord2.lat);
-  const lon2 = degToRad(coord2.lng);
+  const lon2 = degToRad(coord2.long);
 
   // Calculate differences between coordinates
   const dLat = lat2 - lat1;
@@ -35,6 +35,5 @@ export function getDistanceDifference(coord1: Coordinate, coord2: Coordinate) {
 }
 
 export function formatDateToHHMM(date: Date): string {
-  const adjustedDate = addHours(date, 2);
   return format(date, 'HH:mm');
 }

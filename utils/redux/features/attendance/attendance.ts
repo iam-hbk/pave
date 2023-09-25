@@ -15,14 +15,17 @@ export async function getClassInfo(
 ): Promise<AttendanceClassProps> {
   const mockApiResponse = {
     qrCodeOrigin: {
-      lat: 40.7128,
-      long: -74.006,
+      // lat: 40.7128,
+      // long: -74.006,
+      //within proximity to HBK's place
+      long: 27.97581902090456,
+      lat: -26.13458398360046,
     },
     moduleName: "Information System 3A",
     moduleCode: "IFS013A",
     lecturerName: "Dr. Fani Radebe",
-    classStartTime: "2023-09-25T13:00:00Z",
-    classEndTime: "2023-09-25T15:00:00Z",
+    classStartTime: "2023-09-25T16:00:00Z",
+    classEndTime: "2023-09-25T18:30:00Z",
   };
 
   // Simulate a delay (e.g., network request)

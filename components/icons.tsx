@@ -605,7 +605,41 @@ export function GoldenCoin({ increaseBy = 0 }: RatioIconProps) {
     </Svg>
   );
 }
+export function OutOfLocationRange({ increaseBy = 0, color }: RatioIconProps) {
+  return (
+    <Svg
+      width={increaseBy + 60}
+      height={increaseBy + 80}
+      viewBox="0 0 60 80"
+      fill="none"
+    >
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M16.453 63.378l.003.003c2.953 4.207 6.413 9.137 10.46 15.005 1.49 2.152 4.677 2.152 6.167 0 4.05-5.87 7.51-10.8 10.464-15.008C57.155 43.99 60 39.938 60 30 60 13.431 46.569 0 30 0 13.431 0 0 13.431 0 30c0 9.938 2.845 13.991 16.453 33.378zM12 28.61C12 18.884 19.884 11 29.61 11c9.726 0 17.61 7.884 17.61 17.61 0 9.726-7.884 17.61-17.61 17.61-9.726 0-17.61-7.884-17.61-17.61zm26.849-9.239c4.647 4.648 4.97 11.75 1.468 16.732l-18.2-18.2c4.985-3.505 12.087-3.176 16.732 1.468zM20.37 37.85c-4.647-4.648-4.97-11.75-1.468-16.732l18.2 18.2c-4.985 3.505-12.087 3.176-16.732-1.468z"
+        fill={color || "#B12F29"}
+      />
+    </Svg>
+  );
+}
 
+export function WithInLocationRange({ increaseBy = 0, color }: RatioIconProps) {
+  return (
+    <Svg
+      width={increaseBy + 61}
+      height={increaseBy + 79}
+      viewBox="0 0 61 79"
+      fill="none"
+    >
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M16.597 62.39C19.55 66.488 23.01 71.287 27.06 77c1.49 2.095 4.677 2.095 6.167 0 4.049-5.714 7.51-10.513 10.464-14.61C57.299 43.52 60.144 39.576 60.144 29.9 60.144 13.774 46.712.7 30.144.7c-16.569 0-30 13.074-30 29.202 0 9.674 2.845 13.62 16.453 32.49zm-.373-29.665l10.749 10.749a1.654 1.654 0 002.338 0L48.33 24.456a1.654 1.654 0 000-2.338l-2.339-2.34a1.654 1.654 0 00-2.338 0l-15.51 15.51-7.241-7.24a1.654 1.654 0 00-2.339 0l-2.338 2.338a1.654 1.654 0 000 2.339z"
+        fill={color || "#007212"}
+      />
+    </Svg>
+  );
+}
 export function Logo({ increaseBy = 0 }: RatioIconProps) {
   /**
    * increaseBy is a number that will increase the size of the logo
