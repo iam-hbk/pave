@@ -2,6 +2,7 @@ import React from "react";
 import { Drawer } from "expo-router/drawer";
 import HomeHeader from "@/components/homeHeader";
 import QRHeader from "@/components/qrHeader";
+import CoinHeader from "@/components/coinHeader";
 
 const Auth = () => {
   return (
@@ -18,6 +19,13 @@ const Auth = () => {
         options={{
           title: "Attendance Register",
           header: (props) => <QRHeader {...props} />,
+        }}
+      />
+      <Drawer.Screen
+        name="coin"
+        options={{
+          title: "Coins",
+          header: (props) => <CoinHeader {...props} />,
         }}
       />
     </Drawer>

@@ -1,7 +1,7 @@
-import { View } from "react-native";
+import { View, Animated } from "react-native";
 import { OPENAI_API_KEY } from "@env";
 import { Input, Text, useTheme } from "@rneui/themed";
-import React, { useEffect } from "react";
+import React, { Children, useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Coin,
@@ -18,12 +18,16 @@ import themeColors from "@/assets/colors";
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
 import axios from "axios";
+import CoinIconAndAmount from "./CoinIconAndAmount";
 const HomeHeader = ({
   navigation,
   route,
   options,
   layout,
-}: DrawerHeaderProps) => {
+  children,
+}: DrawerHeaderProps & { children?: React.ReactNode }) => {
+  const scrollY = React.useRef(new Animated.Value(0)).current;
+
   const [theQuote, setTheQuote] = React.useState<string>("Loading..."); // [1
   let quote: string;
   const insets = useSafeAreaInsets();
@@ -36,7 +40,6 @@ const HomeHeader = ({
   ];
 
   async function generateShortCode(): Promise<string> {
-    console.log(OPENAI_API_KEY);
     try {
       const response = await axios.post(
         "https://api.openai.com/v1/chat/completions",
@@ -88,7 +91,7 @@ const HomeHeader = ({
       return "";
     }
   }
-  // let theQuote;
+
   useEffect(() => {
     generateShortCode().then((data) => {
       quote = data;
@@ -98,26 +101,26 @@ const HomeHeader = ({
     });
   }, []);
 
+  const headerHeight = scrollY.interpolate({
+    inputRange: [0, 100], // adjust based on your needs
+    outputRange: [300, 60], // adjust based on your needs
+    extrapolate: "clamp",
+  });
   return (
-    <View
+    <Animated.View
       // intensity={100}
       style={{
+        height: headerHeight,
         paddingTop: insets.top,
         paddingBottom: 20,
         paddingLeft: insets.left + 18,
         paddingRight: insets.right + 18,
         gap: 10,
-        // height: 300,
-        // borderWidth: 1,
         backgroundColor: themeColors.white,
-
-        // iOS shadow properties
         shadowColor: "#dadada",
         shadowOffset: { width: -1, height: 4 },
         shadowOpacity: 0.5,
         shadowRadius: 2,
-
-        // Android shadow properties
         elevation: 5,
         borderBottomRightRadius: 30,
         borderBottomLeftRadius: 30,
@@ -135,49 +138,7 @@ const HomeHeader = ({
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <HambergerMenu />
         </TouchableOpacity>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            // iOS shadow properties
-            shadowColor: "#dadada",
-            shadowOffset: { width: -1, height: 4 },
-            shadowOpacity: 0.5,
-            shadowRadius: 2,
-
-            // Android shadow properties
-            elevation: 5,
-
-            // borderWidth: 1,
-            // borderColor: themeColors.grey0,
-            // paddingVertical: 5,
-            // paddingHorizontal: 10,
-            // gap: 20,
-            // borderRadius: 10,
-          }}
-        >
-          <GoldenCoin increaseBy={-10} />
-          <View
-            style={{
-              backgroundColor: "#FFEDB0",
-              paddingVertical: 5,
-              paddingHorizontal: 10,
-              zIndex: -1,
-              borderRadius: 10,
-              marginLeft: -30,
-              paddingLeft: 35,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 20,
-                color: theme.colors.grey3,
-              }}
-            >
-              3500
-            </Text>
-          </View>
-        </View>
+        <CoinIconAndAmount />
       </View>
 
       <View
@@ -226,7 +187,17 @@ const HomeHeader = ({
           </TouchableOpacity>
         ))}
       </View>
-    </View>
+
+      <Animated.ScrollView
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false } // Remember to set this to false since height is not supported by native driver
+        )}
+        scrollEventThrottle={16} // Use this to control the scroll event frequency
+      >
+        {children}
+      </Animated.ScrollView>
+    </Animated.View>
   );
 };
 

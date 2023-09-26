@@ -13,6 +13,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { selectQuestions } from "@/utils/redux/features/questions/questionSlice";
 import { LinearProgress } from "@rneui/themed";
 import DailyQuestionModal from "@/components/dailyQuestionModal";
+import HomeHeader from "@/components/homeHeader";
 
 interface Task {
   id: number;
