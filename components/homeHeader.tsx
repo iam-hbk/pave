@@ -1,6 +1,7 @@
 import { View } from "react-native";
+import { OPENAI_API_KEY } from "@env";
 import { Input, Text, useTheme } from "@rneui/themed";
-import React from "react";
+import React, { useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Coin,
@@ -16,13 +17,15 @@ import { DrawerHeaderProps } from "@react-navigation/drawer";
 import themeColors from "@/assets/colors";
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
-
+import axios from "axios";
 const HomeHeader = ({
   navigation,
   route,
   options,
   layout,
 }: DrawerHeaderProps) => {
+  const [theQuote, setTheQuote] = React.useState<string>("Loading..."); // [1
+  let quote: string;
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   const icons = [
@@ -31,6 +34,70 @@ const HomeHeader = ({
     { component: <QRIcon increaseBy={-6} />, route: "/(app)/home/qr" },
     { component: <Coin />, route: "/(app)/home/coin" },
   ];
+
+  async function generateShortCode(): Promise<string> {
+    console.log(OPENAI_API_KEY);
+    try {
+      const response = await axios.post(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          model: "gpt-3.5-turbo",
+          messages: [
+            {
+              role: "system",
+              content:
+                "Generate only one,short,funny quote to motivate student,  be creative, not more than 50 characters.",
+            },
+          ],
+          // max_tokens: 2000,
+          // n: 1,
+          // stop: null,
+          // temperature: 0.5,
+          // top_p: 1.0,
+          // frequency_penalty: 0.0,
+          // presence_penalty: 0.0,,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${OPENAI_API_KEY}`,
+          },
+        }
+      );
+
+      // Check if the response has the 'choices' property and at least one choice
+      if (
+        response &&
+        response.data &&
+        response.data.choices &&
+        response.data.choices.length > 0
+      ) {
+        console.log(response.data.choices[0].message.content);
+        return response.data.choices[0].message.content;
+      } else {
+        console.error(
+          "Error: Unexpected response format from OpenAI API. Status:",
+          response.status,
+          "Data:",
+          response.data
+        );
+        return "";
+      }
+    } catch (error) {
+      console.error("Error during summary and action steps generation:", error);
+      return "";
+    }
+  }
+  // let theQuote;
+  useEffect(() => {
+    generateShortCode().then((data) => {
+      quote = data;
+      // remove the double quote from the string
+      quote = quote.replace('"', "");
+      setTheQuote(quote);
+    });
+  }, []);
+
   return (
     <View
       // intensity={100}
@@ -121,14 +188,16 @@ const HomeHeader = ({
         }}
       >
         <Logo increaseBy={25} />
-        <Text
-          h4
-          style={{
-            color: theme.colors.grey3,
-          }}
-        >
-          ~My GPA is like my coffee, it's high until I get to class.
-        </Text>
+        {theQuote && (
+          <Text
+            h4
+            style={{
+              color: theme.colors.grey3,
+            }}
+          >
+            {/* {quote ? quote : "Loading..."}  */}~{theQuote}
+          </Text>
+        )}
       </View>
       <View
         style={{
