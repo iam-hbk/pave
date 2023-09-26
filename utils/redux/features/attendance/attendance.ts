@@ -1,3 +1,5 @@
+import { addHours } from "date-fns";
+
 interface AttendanceClassProps {
   qrCodeOrigin: {
     lat: number;
@@ -31,12 +33,14 @@ export async function getClassInfo(
   // Simulate a delay (e.g., network request)
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  // throw Error("Colere");
   // Convert date strings to Date objects
   return {
     ...mockApiResponse,
-    classStartTime: new Date(mockApiResponse.classStartTime),
-    classEndTime: new Date(mockApiResponse.classEndTime),
+    // classStartTime: new Date(mockApiResponse.classStartTime),
+    // classEndTime: new Date(mockApiResponse.classEndTime),
+    //For testing
+    classStartTime: new Date(),
+    classEndTime: addHours(new Date(), 2),
   };
 }
 

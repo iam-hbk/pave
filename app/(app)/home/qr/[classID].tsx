@@ -1,7 +1,15 @@
 import { View } from "react-native";
 import React from "react";
 import { router } from "expo-router";
-import { Button, Text, Input, Icon, useTheme, Chip } from "@rneui/themed";
+import {
+  Button,
+  Text,
+  Input,
+  Icon,
+  useTheme,
+  Chip,
+  Skeleton,
+} from "@rneui/themed";
 import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { getClassInfo } from "@/utils/redux/features/attendance/attendance";
@@ -11,7 +19,11 @@ import Countdown from "@/components/countDown";
 import { ScrollView } from "react-native-gesture-handler";
 import * as Location from "expo-location";
 import { set } from "date-fns";
-import { OutOfLocationRange, WithInLocationRange } from "@/components/icons";
+import {
+  ErrorBlob,
+  OutOfLocationRange,
+  WithInLocationRange,
+} from "@/components/icons";
 import useLocation from "@/hooks/useLocation";
 const ScannedData = () => {
   const { classID } = useLocalSearchParams<{ classID: string }>();
@@ -21,6 +33,7 @@ const ScannedData = () => {
 
   const { location, locationLoading, errorMsg } = useLocation();
   const [distance, setDistance] = React.useState<number>();
+  const [canSignAttendance, setCanSignAttendance] = React.useState<boolean>();
 
   const onAttendanceConfirmation = () => {
     alert("Attendance Confirmed");
@@ -33,19 +46,93 @@ const ScannedData = () => {
         { lat: location.coords.latitude, long: location.coords.longitude },
         { lat: data.qrCodeOrigin.lat, long: data.qrCodeOrigin.long }
       );
-      console.log("Distance:", d);
       setDistance(d);
+      setCanSignAttendance(d < 100);
     }
   }, [location, data]);
 
   if (isLoading) {
-    return <Text h3>Loading...</Text>;
+    return (
+      <View
+        style={{
+          flex: 1,
+          gap: 20,
+          padding: 20,
+        }}
+      >
+        <Skeleton
+          skeletonStyle={{
+            backgroundColor: themeColors.quaternaryShaded[200],
+          }}
+          style={{
+            backgroundColor: themeColors.quaternaryShaded[100],
+            flex: 2,
+          }}
+        />
+        <Skeleton
+          skeletonStyle={{
+            backgroundColor: themeColors.quaternaryShaded[200],
+          }}
+          style={{
+            backgroundColor: themeColors.quaternaryShaded[100],
+            flex: 2,
+          }}
+        />
+        <Skeleton
+          skeletonStyle={{
+            backgroundColor: themeColors.quaternaryShaded[200],
+          }}
+          style={{
+            backgroundColor: themeColors.quaternaryShaded[100],
+            flex: 1,
+          }}
+        />
+        <Skeleton
+          skeletonStyle={{
+            backgroundColor: themeColors.quaternaryShaded[200],
+          }}
+          style={{
+            backgroundColor: themeColors.quaternaryShaded[100],
+            flex: 0.5,
+            borderRadius: 10,
+          }}
+        />
+      </View>
+    );
   }
 
   if (isError || (errorMsg && errorMsg.length > 0)) {
     return (
-      <View>
-        <Text h3>Error: {(error as Error).message}</Text>
+      <View
+        style={{
+          flex: 1,
+          padding: 20,
+          gap: 20,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          h1
+          style={{
+            color: themeColors.grey3,
+            textAlign: "center",
+          }}
+          h1Style={{
+            fontSize: 30,
+          }}
+        >
+          Uhm! someone broke something !{" "}
+        </Text>
+        <ErrorBlob increaseBy={80} />
+        <Text
+          h3
+          style={{
+            color: themeColors.error,
+          }}
+        >
+          Error: {(error as Error).message}
+        </Text>
         {errorMsg && <Text h3>Error: {errorMsg}</Text>}
         <Button title={"Try Again"} onPress={() => router.replace("../")} />
       </View>
@@ -238,14 +325,49 @@ const ScannedData = () => {
           }}
         >
           {!location && locationLoading && "Getting your location..."}
-          {distance && distance < 100 ? (
-            <WithInLocationRange />
+          {distance && canSignAttendance ? (
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 10,
+              }}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: themeColors.success,
+                }}
+              >
+                You are within the required range to sign the attendance
+                register
+              </Text>
+              <WithInLocationRange />
+            </View>
           ) : (
-            <OutOfLocationRange />
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 10,
+              }}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: themeColors.error,
+                }}
+              >
+                You are not within the required range to sign the attendance
+                register
+              </Text>
+              <OutOfLocationRange />
+            </View>
           )}
         </Text>
       </View>
       <Button
+        disabled={!canSignAttendance}
         title={"Confirm Attendance"}
         onPress={() => onAttendanceConfirmation()}
       />
