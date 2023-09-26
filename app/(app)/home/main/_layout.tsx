@@ -13,14 +13,6 @@ const Main = () => {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name="[dailyQuestionId]"
-        options={{
-          presentation: "modal",
-          title: "Daily Question",
-          // headerShown: false,
-        }}
-      />
     </Stack>
   );
 };
