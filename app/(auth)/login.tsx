@@ -8,6 +8,8 @@ import { loginUser } from "@/utils/redux/features/user/user";
 
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { LoginProps } from "@/types";
+import { TouchableOpacity } from "react-native-gesture-handler";
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string().required("Password is required"),
@@ -18,14 +20,15 @@ const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const { theme } = useTheme();
 
-  const handleLogin = async (values: { email: string; password: string }) => {
-    const result = await loginUser(values.email);
-
-    if (result instanceof Error) {
-      console.log("Error logging in:", result.message);
-    } else {
+  const handleLogin = async (values: LoginProps) => {
+    try {
+      console.log("Logging in with:", values);
+      const result = await loginUser(values);
+      console.log("Result:", result);
       dispatch(setUser(result));
-      router.replace("/(app)/home");
+      router.replace("/(app)/home/main");
+    } catch (error: any) {
+      console.log("Error logging in:", error);
     }
   };
 
@@ -122,7 +125,11 @@ const Login = () => {
                 errorMessage={errors.password}
                 placeholder="Enter your password"
               />
-              <Link href={"/(auth)/(forgotPassword)/forgotPassword"} asChild>
+              <TouchableOpacity
+                onPress={() =>
+                  router.push("/(auth)/(forgotPassword)/forgotPassword")
+                }
+              >
                 <Text
                   style={{
                     alignSelf: "flex-end",
@@ -133,7 +140,7 @@ const Login = () => {
                 >
                   Forgot Password ?
                 </Text>
-              </Link>
+              </TouchableOpacity>
               <Button
                 style={{
                   margin: 10,
@@ -144,20 +151,29 @@ const Login = () => {
                 onPress={() => handleSubmit()}
               />
             </View>
-            <Text
+            <View
               style={{
                 alignSelf: "center",
-                fontSize: 18,
+                justifyContent: "center",
+                flexDirection: "row",
+                alignItems: "center",
                 margin: 10,
               }}
             >
-              Don’t have an account?{" "}
-              <Link href={"/(auth)/register"} asChild>
-                <Text style={{ color: theme.colors.primary }}>
+              <Text
+                style={{
+                  alignSelf: "center",
+                  fontSize: 18,
+                }}
+              >
+                Don’t have an account?{" "}
+              </Text>
+              <TouchableOpacity onPress={() => router.push("/(auth)/register")}>
+                <Text style={{ color: theme.colors.primary, fontSize: 18 }}>
                   Register Now
                 </Text>
-              </Link>
-            </Text>
+              </TouchableOpacity>
+            </View>
           </KeyboardAvoidingView>
         )}
       </Formik>

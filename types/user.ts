@@ -1,28 +1,24 @@
 export type User = {
-  id: number;
-  name: string;
-  username: string;
-  email: string;
-  address: {
-    street: string;
-    suite: string;
-    city: string;
-    zipcode: string;
-    geo: {
-      lat: string;
-      lng: string;
-    };
-  };
-  phone: string;
-  website: string;
-  company: {
+  token: string;
+  user: {
+    _id: string;
+    email: string;
+    password: string;
+    role: "Student" | "Lecturer" | "Admin";
     name: string;
-    catchPhrase: string;
-    bs: string;
+    profilePicture?: string; // url
+    wallet: number;
+    __v?: number;
   };
 };
 export type RegisterProps = {
   email: string;
   password: string;
-  username: string;
+  name: string;
+  role: "Student" | "Lecturer" | "Admin";
+};
+
+export type LoginProps = {
+  email: string;
+  password: string;
 };

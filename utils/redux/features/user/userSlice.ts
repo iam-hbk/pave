@@ -9,26 +9,15 @@ type UserSliceState = {
 const initialState: UserSliceState = {
   //initial state is null, this is just for testing
   user: {
-    id: 3,
-    name: "Clementine Bauch",
-    username: "Samantha",
-    email: "Nathan@yesenia.net",
-    address: {
-      street: "Douglas Extension",
-      suite: "Suite 847",
-      city: "McKenziehaven",
-      zipcode: "59590-4157",
-      geo: {
-        lat: "-68.6102",
-        lng: "-47.0653",
-      },
-    },
-    phone: "1-463-123-4447",
-    website: "ramiro.info",
-    company: {
-      name: "Romaguera-Jacobson",
-      catchPhrase: "Face to face bifurcated interface",
-      bs: "e-enable strategic applications",
+    token:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTE0M2ZlMjNkMDY0OTJlYWQ5ZGRlODUiLCJpYXQiOjE2OTU4Mjc5MDAsImV4cCI6MTY5NjQzMjcwMH0.mEJ0H5A4FBo5xkwbjajKRs7ftk2BtgFY2ZyXaDcnZw0",
+    user: {
+      _id: "65143fe23d06492ead9dde85",
+      email: "heritier",
+      password: "$2b$10$Ehq0I4aZpBelfeR3CLTnHuhx/OgkmFkgx51im5v0Nifm0Y9LE/l5q",
+      role: "Student",
+      name: "Heritier Kaumbu",
+      wallet: 0,
     },
   },
 };
@@ -54,6 +43,7 @@ export const userSlice = createSlice({
 export const { setUser, unSetUser, updateUser } = userSlice.actions;
 
 //Selectors
-export const selectUser = (state: { user: UserSliceState }) => state.user.user;
+export const selectUser = (state: { user: UserSliceState }) =>
+  state.user.user?.user;
 
 export default userSlice.reducer;

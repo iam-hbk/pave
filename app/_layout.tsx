@@ -49,6 +49,9 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   // Get this from the local storage to check if the user is logged in or not.
+  
+
+
   const isLoggedIn = true; // Replace this with actual logic
   useEffect(() => {
     if (isLoggedIn) {

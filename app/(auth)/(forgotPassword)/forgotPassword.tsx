@@ -9,6 +9,7 @@ import { loginUser, verifyUser } from "@/utils/redux/features/user/user";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { ForgotPasswordBlob } from "@/components/icons";
+import { TouchableOpacity } from "react-native-gesture-handler";
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
 });
@@ -116,18 +117,21 @@ const ForgotPassword = () => {
                 onPress={() => handleSubmit()}
               />
             </View>
-            <Text
+            <View
               style={{
                 alignSelf: "center",
-                fontSize: 18,
+                flexDirection: "row",
+                alignItems: "center",
                 margin: 10,
               }}
             >
-              Remember Password?{" "}
-              <Link href={"/(auth)/login"} asChild>
-                <Text style={{ color: theme.colors.primary }}>Login Now</Text>
-              </Link>
-            </Text>
+              <Text style={{ fontSize: 18 }}>Remember Password? </Text>
+              <TouchableOpacity onPress={() => router.push("/(auth)/login")}>
+                <Text style={{ color: theme.colors.primary, fontSize: 18 }}>
+                  Login Now
+                </Text>
+              </TouchableOpacity>
+            </View>
           </KeyboardAvoidingView>
         )}
       </Formik>

@@ -37,3 +37,5 @@ export function getDistanceDifference(coord1: Coordinate, coord2: Coordinate) {
 export function formatDateToHHMM(date: Date): string {
   return format(date, 'HH:mm');
 }
+
+

@@ -11,8 +11,13 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { KeyboardAvoidingView } from "react-native";
 import { RegisterProps } from "@/types";
+
+interface RegisterPropsExt extends RegisterProps {
+  confirmPassword: string;
+}
+
 const LoginSchema = Yup.object().shape({
-  username: Yup.string().required("Username is required"),
+  name: Yup.string().required("name is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string().required("Password is required"),
   confirmPassword: Yup.string()
@@ -25,16 +30,19 @@ const Register = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const { theme } = useTheme();
 
-  const handleLogin = async (values: RegisterProps) => {
-    console.log(values);
-
-    const result = await registerUser(values);
-
-    if (result instanceof Error) {
-      console.log("Error logging in:", result.message);
-    } else {
+  const handleRegister = async (values: RegisterPropsExt) => {
+    const v: RegisterProps = {
+      ...values,
+      email: values.email.toLowerCase(),
+      name: values.name.toLowerCase(),
+    };
+    try {
+      const result = await registerUser(v);
+      console.log("============Result:", result);
       dispatch(setUser(result));
-      router.replace("/(app)/home");
+      router.replace("/(app)/home/main");
+    } catch (error: any) {
+      console.log("Error logging in:", error);
     }
   };
 
@@ -51,11 +59,12 @@ const Register = () => {
         initialValues={{
           email: "",
           password: "",
-          username: "",
+          name: "",
           confirmPassword: "",
+          role: "Student",
         }}
         validationSchema={LoginSchema}
-        onSubmit={handleLogin}
+        onSubmit={handleRegister}
       >
         {({
           handleChange,
@@ -79,6 +88,7 @@ const Register = () => {
               style={{
                 alignSelf: "center",
                 paddingHorizontal: 14,
+                textAlign: "center",
               }}
             >
               Hello! Register to get started
@@ -104,11 +114,11 @@ const Register = () => {
                     }}
                   />
                 }
-                placeholder="Create a your username"
-                onChangeText={handleChange("username")}
-                onBlur={handleBlur("username")}
-                value={values.username}
-                errorMessage={errors.username}
+                placeholder="Enter your name and surname"
+                onChangeText={handleChange("name")}
+                onBlur={handleBlur("name")}
+                value={values.name}
+                errorMessage={errors.name}
               />
               <Input
                 leftIcon={
