@@ -35,7 +35,6 @@ const Login = () => {
       Toast.show({
         type: "success",
         position: "top",
-        // text1: "Success",
         text2: "Successfully logged in",
         visibilityTime: 4000,
         autoHide: true,

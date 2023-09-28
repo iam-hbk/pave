@@ -21,7 +21,13 @@ interface RegisterPropsExt extends RegisterProps {
 
 const LoginSchema = Yup.object().shape({
   name: Yup.string().required("name is required"),
-  email: Yup.string().email("Invalid email").required("Email is required"),
+  email: Yup.string()
+    .email("Invalid email")
+    .required("Email is required")
+    .matches(
+      /^\d{9}@student\.uj\.ac\.za$/,
+      "Please enter a valid UJ student email address <student_number>@student.uj.ac.za"
+    ),
   password: Yup.string().required("Password is required"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password")], "Passwords must match")
@@ -44,6 +50,14 @@ const Register = () => {
       const result = await registerUser(v);
       console.log("============Result:", result);
       dispatch(setUser(result));
+      Toast.show({
+        type: "success",
+        position: "top",
+        text2: "Successfully logged in",
+        visibilityTime: 4000,
+        autoHide: true,
+        topOffset: 50,
+      });
       router.replace("/(app)/home/main");
     } catch (error: any) {
       Toast.show({
@@ -51,7 +65,7 @@ const Register = () => {
         position: "top",
         text1: "Error",
         text2: JSON.parse(error.message).message,
-        visibilityTime: 4000, 
+        visibilityTime: 4000,
         autoHide: true,
         topOffset: 50,
       });
