@@ -16,6 +16,9 @@ import { DrawerHeaderProps } from "@react-navigation/drawer";
 import themeColors from "@/assets/colors";
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
+import Toast from "react-native-toast-message";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/utils/redux/features/user/userSlice";
 
 const HomeHeader = ({
   navigation,
@@ -25,6 +28,7 @@ const HomeHeader = ({
 }: DrawerHeaderProps) => {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
+  const user = useSelector(selectUser);
   const icons = [
     { component: <SchoolHat />, route: "/(app)/home/school" },
     { component: <QuizIcon />, route: "/(app)/home/quiz" },
@@ -72,33 +76,25 @@ const HomeHeader = ({
           style={{
             flexDirection: "row",
             alignItems: "center",
-            // iOS shadow properties
-            shadowColor: "#dadada",
-            shadowOffset: { width: -1, height: 4 },
-            shadowOpacity: 0.5,
-            shadowRadius: 2,
 
-            // Android shadow properties
-            elevation: 5,
-
-            // borderWidth: 1,
-            // borderColor: themeColors.grey0,
-            // paddingVertical: 5,
-            // paddingHorizontal: 10,
-            // gap: 20,
-            // borderRadius: 10,
+            borderWidth: 1,
+            borderColor: themeColors.grey0,
+            paddingVertical: 5,
+            paddingHorizontal: 10,
+            gap: 10,
+            borderRadius: 10,
           }}
         >
-          <GoldenCoin increaseBy={-10} />
+          <GoldenCoin increaseBy={-25} />
           <View
             style={{
-              backgroundColor: "#FFEDB0",
+              // backgroundColor: "#FFEDB0",
               paddingVertical: 5,
-              paddingHorizontal: 10,
+              // paddingHorizontal: 10,
               zIndex: -1,
               borderRadius: 10,
-              marginLeft: -30,
-              paddingLeft: 35,
+              // marginLeft: -30,
+              // paddingLeft: 35,
             }}
           >
             <Text
@@ -107,7 +103,7 @@ const HomeHeader = ({
                 color: theme.colors.grey3,
               }}
             >
-              3500
+              {user?.wallet}
             </Text>
           </View>
         </View>

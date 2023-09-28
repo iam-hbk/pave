@@ -1,4 +1,5 @@
 import { LoginProps, RegisterProps, User } from "@/types";
+import Toast from "react-native-toast-message";
 import api from "../../api";
 
 export async function loginUser({
@@ -30,7 +31,7 @@ export async function registerUser({
       name,
       role,
     });
-    console.log("LOGGED IN:", user);
+    console.log("[user-api/register]\tLOGGED IN:", user);
     return user as User;
   } catch (error) {
     throw Error((error as Error).message);

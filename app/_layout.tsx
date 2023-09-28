@@ -11,6 +11,8 @@ import theme from "@/assets/theme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "@/utils/helpers";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -49,8 +51,6 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   // Get this from the local storage to check if the user is logged in or not.
-  
-
 
   const isLoggedIn = true; // Replace this with actual logic
   useEffect(() => {
@@ -74,6 +74,7 @@ function RootLayoutNav() {
               }}
             />
           </SafeAreaProvider>
+          <Toast config={toastConfig} />
         </ThemeProvider>
       </QueryClientProvider>
     </Provider>

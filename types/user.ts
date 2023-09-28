@@ -22,3 +22,9 @@ export type LoginProps = {
   email: string;
   password: string;
 };
+
+export type LocalToken = {
+  token: string;
+  expiry: number;
+  user: User;
+};
