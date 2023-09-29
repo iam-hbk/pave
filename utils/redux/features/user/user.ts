@@ -1,18 +1,37 @@
 import { LoginProps, RegisterProps, User } from "@/types";
 import Toast from "react-native-toast-message";
 import api from "../../api";
+import { setUserTokenToLocalStorage } from "@/utils/helpers";
 
 export async function loginUser({
   email,
   password,
 }: LoginProps): Promise<User> {
   try {
-    const user = await api.url("/users/login").post({
+    const responseData: any = await api.url("/users/login").post({
       email,
       password,
     });
-    console.log("LOGGED IN:", user);
-    return user as User;
+
+    const user: User = {
+      _id: responseData.user._id,
+      email: responseData.user.email,
+      role: responseData.user.role,
+      name: responseData.user.name,
+      profilePicture: responseData.user.profilePicture,
+      wallet: responseData.user.wallet,
+      token: responseData.token,
+    };
+
+    // Save the user data to local storage
+    await setUserTokenToLocalStorage(user);
+
+    if (user) {
+      console.log("LOGGED IN:", user);
+    } else {
+      console.log("Unexpected user data:", user);
+    }
+    return user;
   } catch (error) {
     throw Error((error as Error).message);
   }

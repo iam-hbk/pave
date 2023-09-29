@@ -1,15 +1,11 @@
 export type User = {
+  _id: string;
+  email: string;
+  role: "Student" | "Lecturer" | "Admin";
+  name: string;
+  profilePicture?: string; // url
+  wallet: number;
   token: string;
-  user: {
-    _id: string;
-    email: string;
-    password: string;
-    role: "Student" | "Lecturer" | "Admin";
-    name: string;
-    profilePicture?: string; // url
-    wallet: number;
-    __v?: number;
-  };
 };
 export type RegisterProps = {
   email: string;
@@ -21,10 +17,4 @@ export type RegisterProps = {
 export type LoginProps = {
   email: string;
   password: string;
-};
-
-export type LocalToken = {
-  token: string;
-  expiry: number;
-  user: User;
 };

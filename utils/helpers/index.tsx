@@ -1,9 +1,9 @@
 import { format, addHours } from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { LocalToken } from "@/types";
 import { BaseToast, ErrorToast, ToastProps } from "react-native-toast-message";
 import themeColors from "@/assets/colors";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
+import { User } from "@/types";
 interface Coordinate {
   lat: number;
   long: number;
@@ -42,24 +42,29 @@ export function formatDateToHHMM(date: Date): string {
   return format(date, "HH:mm");
 }
 
-export async function setUserTokenToLocalStorage(
-  token: LocalToken
-): Promise<void> {
+export async function setUserTokenToLocalStorage(token: User): Promise<void> {
   try {
     await AsyncStorage.setItem("token", JSON.stringify(token));
   } catch (error) {
-    console.log("Error setting token:", error);
+    throw error;
   }
 }
 
-export async function getUserTokenFromLocalStorage(): Promise<LocalToken | null> {
+export async function getUserTokenFromLocalStorage(): Promise<User | null> {
   try {
     const tokenString = await AsyncStorage.getItem("token");
-    return tokenString != null ? JSON.parse(tokenString) : null;
+    console.log("tokenString:", tokenString);
+    return tokenString ? JSON.parse(tokenString) : null;
   } catch (error) {
-    // console.log("Error getting token:", error);
     throw error;
-    // return null;
+  }
+}
+
+export async function removeUserTokenFromLocalStorage(): Promise<void> {
+  try {
+    await AsyncStorage.removeItem("token");
+  } catch (error) {
+    throw error;
   }
 }
 

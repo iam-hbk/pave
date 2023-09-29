@@ -30,7 +30,6 @@ const Login = () => {
     };
     try {
       const result = await loginUser(v);
-      console.log("Result:", result);
       dispatch(setUser(result));
       Toast.show({
         type: "success",
