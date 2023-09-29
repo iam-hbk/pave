@@ -1,8 +1,8 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { store } from "@/utils/redux/store";
-import { Provider } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { ThemeProvider } from "@rneui/themed";
-
+import React from "react";
 import fonts from "@/assets/fonts";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, router } from "expo-router";
@@ -11,6 +11,9 @@ import theme from "@/assets/theme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Toast from "react-native-toast-message";
+import { getUserTokenFromLocalStorage, toastConfig } from "@/utils/helpers";
+import { setUser } from "@/utils/redux/features/user/userSlice";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -48,31 +51,46 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  // Get this from the local storage to check if the user is logged in or not.
-  const isLoggedIn = true; // Replace this with actual logic
-  useEffect(() => {
-    if (isLoggedIn) {
-      router.replace("/home");
-    } else {
-      router.replace("/welcome");
-    }
-  }, []); // Empty dependency array means this useEffect runs once after the initial render
-
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <StatusBar style="dark" />
         <ThemeProvider theme={theme}>
           <SafeAreaProvider>
-            <Stack
-              screenOptions={{
-                headerShown: false,
-                animation: "fade",
-              }}
-            />
+            <App />
           </SafeAreaProvider>
+          <Toast config={toastConfig} />
         </ThemeProvider>
       </QueryClientProvider>
     </Provider>
+  );
+}
+
+function App() {
+  const dispatch = useDispatch();
+  const [screenLoading, setScreenLoading] = React.useState<boolean>(true);
+  async function onStartUp() {
+    const user = await getUserTokenFromLocalStorage();
+    setScreenLoading(false);
+    if (user) {
+      dispatch(setUser(user));
+      router.replace("/home");
+    } else {
+      router.replace("/welcome");
+    }
+  }
+
+  useEffect(() => {
+    onStartUp();
+  }, []);
+
+
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        animation: "fade",
+      }}
+    />
   );
 }

@@ -1,4 +1,4 @@
-import { SafeAreaView, View } from "react-native";
+import { SafeAreaView, View, Platform } from "react-native";
 import React from "react";
 import { Link, router } from "expo-router";
 import { Button, Text, Input, Icon, useTheme, InputProps } from "@rneui/themed";
@@ -11,9 +11,23 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { KeyboardAvoidingView } from "react-native";
 import { RegisterProps } from "@/types";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
+
+interface RegisterPropsExt extends RegisterProps {
+  confirmPassword: string;
+}
+
 const LoginSchema = Yup.object().shape({
-  username: Yup.string().required("Username is required"),
-  email: Yup.string().email("Invalid email").required("Email is required"),
+  name: Yup.string().required("name is required"),
+  email: Yup.string()
+    .email("Invalid email")
+    .required("Email is required")
+    .matches(
+      /^\d{9}@student\.uj\.ac\.za$/,
+      "Please enter a valid UJ student email address <student_number>@student.uj.ac.za"
+    ),
   password: Yup.string().required("Password is required"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password")], "Passwords must match")
@@ -21,41 +35,63 @@ const LoginSchema = Yup.object().shape({
 });
 
 const Register = () => {
+  const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
   const { theme } = useTheme();
 
-  const handleLogin = async (values: RegisterProps) => {
-    console.log(values);
-
-    const result = await registerUser(values);
-
-    if (result instanceof Error) {
-      console.log("Error logging in:", result.message);
-    } else {
+  const handleRegister = async (values: RegisterPropsExt) => {
+    const v: RegisterProps = {
+      ...values,
+      email: values.email.toLowerCase(),
+      name: values.name.toLowerCase(),
+    };
+    try {
+      const result = await registerUser(v);
+      console.log("============Result:", result);
       dispatch(setUser(result));
-      router.replace("/(app)/home");
+      Toast.show({
+        type: "success",
+        position: "top",
+        text2: "Successfully logged in",
+        visibilityTime: 4000,
+        autoHide: true,
+        topOffset: 50,
+      });
+      router.replace("/(app)/home/main");
+    } catch (error: any) {
+      Toast.show({
+        type: "error",
+        position: "top",
+        text1: "Error",
+        text2: JSON.parse(error.message).message,
+        visibilityTime: 4000,
+        autoHide: true,
+        topOffset: 50,
+      });
     }
   };
 
   return (
-    <SafeAreaView
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
       style={{
-        flex: 1,
-        marginHorizontal: 15,
-        margin: 20,
+        flexDirection: "column",
         justifyContent: "center",
+        flex: 1,
+        gap: 40,
       }}
     >
       <Formik
         initialValues={{
           email: "",
           password: "",
-          username: "",
+          name: "",
           confirmPassword: "",
+          role: "Student",
         }}
         validationSchema={LoginSchema}
-        onSubmit={handleLogin}
+        onSubmit={handleRegister}
       >
         {({
           handleChange,
@@ -63,22 +99,16 @@ const Register = () => {
           handleSubmit,
           values,
           errors,
+          touched,
           isSubmitting,
         }) => (
-          <KeyboardAvoidingView
-            behavior="padding"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-around",
-              gap: 40,
-            }}
-          >
+          <>
             <Text
               h2
               style={{
                 alignSelf: "center",
                 paddingHorizontal: 14,
+                textAlign: "center",
               }}
             >
               Hello! Register to get started
@@ -104,11 +134,12 @@ const Register = () => {
                     }}
                   />
                 }
-                placeholder="Create a your username"
-                onChangeText={handleChange("username")}
-                onBlur={handleBlur("username")}
-                value={values.username}
-                errorMessage={errors.username}
+                onFocus={(e) => console.log("Focus", e)}
+                placeholder="Enter your name and surname"
+                onChangeText={handleChange("name")}
+                onBlur={handleBlur("name")}
+                value={values.name}
+                errorMessage={touched.name ? errors.name : undefined}
               />
               <Input
                 leftIcon={
@@ -127,7 +158,7 @@ const Register = () => {
                 onChangeText={handleChange("email")}
                 onBlur={handleBlur("email")}
                 value={values.email}
-                errorMessage={errors.email}
+                errorMessage={touched.email ? errors.email : undefined}
               />
               <Input
                 leftIcon={<EvilIcons name="lock" size={35} color="#8391A1" />}
@@ -147,7 +178,7 @@ const Register = () => {
                 onChangeText={handleChange("password")}
                 onBlur={handleBlur("password")}
                 value={values.password}
-                errorMessage={errors.password}
+                errorMessage={touched.password ? errors.password : undefined}
                 placeholder="Enter your password"
               />
               <Input
@@ -174,7 +205,9 @@ const Register = () => {
                 onChangeText={handleChange("confirmPassword")}
                 onBlur={handleBlur("confirmPassword")}
                 value={values.confirmPassword}
-                errorMessage={errors.confirmPassword}
+                errorMessage={
+                  touched.confirmPassword ? errors.confirmPassword : undefined
+                }
                 placeholder="Confirm your password"
               />
               <Button
@@ -187,22 +220,39 @@ const Register = () => {
                 onPress={() => handleSubmit()}
               />
             </View>
-            <Text
+            <View
               style={{
-                alignSelf: "center",
-                fontSize: 18,
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
                 margin: 10,
               }}
             >
-              Have an account ?{" "}
-              <Link href={"/(auth)/login"} asChild>
-                <Text style={{ color: theme.colors.primary }}>Login Now</Text>
-              </Link>
-            </Text>
-          </KeyboardAvoidingView>
+              <Text
+                style={{
+                  alignSelf: "center",
+                  fontSize: 18,
+                }}
+              >
+                Have an account ?{" "}
+              </Text>
+              <TouchableOpacity onPress={() => router.push("/(auth)/login")}>
+                <Text
+                  style={{
+                    alignSelf: "center",
+                    fontSize: 18,
+                    color: theme.colors.primary,
+                  }}
+                >
+                  Login Now
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </>
         )}
       </Formik>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 

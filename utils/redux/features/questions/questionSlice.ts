@@ -37,6 +37,7 @@ export const { setQuestions } = questionSlice.actions;
 export const selectQuestions = (state: {
   questions: QuestionTypeSliceState;
 }): QuestionType[] | null => state.questions.questions;
+
 export const selectQuestionById =
   (id: string) =>
   (state: { questions: QuestionTypeSliceState }): QuestionType | undefined =>
