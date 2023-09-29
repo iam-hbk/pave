@@ -1,5 +1,4 @@
 import { LoginProps, RegisterProps, User } from "@/types";
-import Toast from "react-native-toast-message";
 import api from "../../api";
 import { setUserTokenToLocalStorage } from "@/utils/helpers";
 
@@ -26,11 +25,6 @@ export async function loginUser({
     // Save the user data to local storage
     await setUserTokenToLocalStorage(user);
 
-    if (user) {
-      console.log("LOGGED IN:", user);
-    } else {
-      console.log("Unexpected user data:", user);
-    }
     return user;
   } catch (error) {
     throw Error((error as Error).message);

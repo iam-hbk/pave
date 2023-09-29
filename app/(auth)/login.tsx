@@ -41,6 +41,7 @@ const Login = () => {
       });
       router.replace("/(app)/home/main");
     } catch (error: any) {
+      console.log("[LOGIN]:",error);
       Toast.show({
         type: "error",
         position: "top",
