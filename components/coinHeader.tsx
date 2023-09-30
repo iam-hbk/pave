@@ -61,12 +61,13 @@ const CoinHeader = ({
       <View
         style={{
           flexDirection: "row",
-          alignItems: "flex-end",
-          justifyContent: "flex-end",
+          alignItems: "center",
+          justifyContent: "space-between",
           flex: 1,
-          paddingHorizontal: 8,
         }}
       >
+        <Logo increaseBy={-13} />
+
         <CoinIconAndAmount />
       </View>
     </BlurView>

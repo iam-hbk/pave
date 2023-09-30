@@ -1,7 +1,12 @@
 import { View, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Text, Button, useTheme, Card } from "@rneui/themed";
-import { GoldenCoin } from "@/components/icons";
+import {
+  CheckedInIcon,
+  CheckedInIconToday,
+  GoldenCoin,
+  Logo,
+} from "@/components/icons";
 import themeColors from "@/assets/colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { Stack } from "@rneui/layout";
@@ -14,12 +19,29 @@ const Coins = () => {
       style={{
         flex: 1,
         alignItems: "center",
-        // justifyContent: "center",
         padding: 20,
       }}
     >
+      <Stack
+        align="center"
+        justify="space-around"
+        style={{
+          flexDirection: "row",
+        }}
+      >
+        {/* <Logo />
+        <Text
+          style={{
+            fontFamily: "UrbanistExtraBold",
+            fontSize: 42,
+            // paddingVertical: 10,
+          }}
+        >
+          {"  "}POINTS */}
+        {/* </Text> */}
+      </Stack>
       <LinearGradient
-        colors={["lightgrey", "#4E018F"]}
+        colors={["#5B88D9", "#4F0A94"]}
         // start={{ x: 0, y: 0.43 }}
         // end={{ x: 0, y: 0.81 }}
         style={{
@@ -37,6 +59,26 @@ const Coins = () => {
         >
           <Stack
             style={{
+              marginHorizontal: -160,
+              // display:'none',
+            }}
+          >
+            <Text
+              style={{
+                color: "white",
+                fontSize: 20,
+                fontWeight: "bold",
+                paddingVertical: 3,
+              }}
+            >
+              3 Day streak
+            </Text>
+            <Text style={{ color: "white" }}>
+              Visit everyday & earn up to 50 coins
+            </Text>
+          </Stack>
+          <Stack
+            style={{
               flexDirection: "row",
               justifyContent: "space-evenly",
               width: "100%",
@@ -45,29 +87,77 @@ const Coins = () => {
               padding: 10,
             }}
           >
-            {days.map((day, index) => (
-              <Stack
-                justify="center"
-                align="center"
-                style={{
-                  backgroundColor: "white",
-                  height: 85,
-                  width: 60,
-                  borderRadius: 10,
-                }}
-              >
-                <Text>{day}</Text>
-              </Stack>
-            ))}
+            {days.map((day, index) => {
+              if (index !== 3) {
+                return (
+                  <Stack key={index} justify="center" align="center">
+                    <Stack
+                      justify="center"
+                      align="center"
+                      style={{
+                        backgroundColor: "#96ace3",
+                        height: 85,
+                        width: 60,
+                        borderRadius: 7,
+                      }}
+                    >
+                      <Stack
+                        justify="space-evenly"
+                        align="center"
+                        style={{
+                          height: "100%",
+                          width: "100%",
+                        }}
+                      >
+                        <CheckedInIcon />
+                        <Text style={{ color: "white" }}>+5</Text>
+                      </Stack>
+                    </Stack>
+                    <Text style={{ color: "white", paddingTop: 5 }}>{day}</Text>
+                  </Stack>
+                );
+              } else {
+                return (
+                  <Stack key={index} justify="center" align="center">
+                    <Stack
+                      justify="center"
+                      align="center"
+                      style={{
+                        backgroundColor: themeColors.tertiaryShaded[600],
+                        height: 85,
+                        width: 60,
+                        borderRadius: 7,
+                      }}
+                    >
+                      <Stack
+                        justify="space-evenly"
+                        align="center"
+                        style={{
+                          height: "100%",
+                          width: "100%",
+                        }}
+                      >
+                        <CheckedInIconToday />
+                        <Text style={{ color: "white" }}>+5</Text>
+                      </Stack>
+                    </Stack>
+                    <Text style={{ color: "white", paddingTop: 5 }}>{day}</Text>
+                  </Stack>
+                );
+              }
+            })}
           </Stack>
-
-          <Button>Check In</Button>
+          <Stack>
+            <Button
+              buttonStyle={{
+                backgroundColor: themeColors.tertiaryShaded[600],
+              }}
+            >
+              Check in{" "}
+            </Button>
+          </Stack>
         </Stack>
       </LinearGradient>
-      <Card>
-        <Card.FeaturedTitle>Featured Title</Card.FeaturedTitle>
-        <Card.FeaturedSubtitle>Featured Subtitle</Card.FeaturedSubtitle>
-      </Card>
     </View>
   );
 };

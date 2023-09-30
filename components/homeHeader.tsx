@@ -49,7 +49,7 @@ const HomeHeader = ({
             {
               role: "system",
               content:
-                "Generate only one,short,funny quote to motivate student,  be creative, not more than 50 characters.",
+                "Generate only one,short,funny quote to motivate student,  be creative, keep it to one short line, max 10 words.",
             },
           ],
           // max_tokens: 2000,
@@ -88,7 +88,7 @@ const HomeHeader = ({
       }
     } catch (error) {
       console.error("Error during summary and action steps generation:", error);
-      return "";
+      return "Leave Snapchat, It will still be there tomorrow";
     }
   }
 
@@ -96,6 +96,8 @@ const HomeHeader = ({
     generateShortCode().then((data) => {
       quote = data;
       // remove the double quote from the string
+      quote = quote.replace('"', "");
+      quote = quote.replace('"', "");
       quote = quote.replace('"', "");
       setTheQuote(quote);
     });
@@ -152,9 +154,9 @@ const HomeHeader = ({
         {theQuote && (
           <Text
             h4
-            style={{
-              color: theme.colors.grey3,
-            }}
+          h4Style={{
+            fontSize: 14,
+          }}
           >
             {/* {quote ? quote : "Loading..."}  */}~{theQuote}
           </Text>
