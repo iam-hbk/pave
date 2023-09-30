@@ -10,6 +10,7 @@ import {
 import themeColors from "@/assets/colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { Stack } from "@rneui/layout";
+import { Image } from "@rneui/themed";
 
 const Coins = () => {
   const { theme } = useTheme();
@@ -28,18 +29,7 @@ const Coins = () => {
         style={{
           flexDirection: "row",
         }}
-      >
-        {/* <Logo />
-        <Text
-          style={{
-            fontFamily: "UrbanistExtraBold",
-            fontSize: 42,
-            // paddingVertical: 10,
-          }}
-        >
-          {"  "}POINTS */}
-        {/* </Text> */}
-      </Stack>
+      ></Stack>
       <LinearGradient
         colors={["#5B88D9", "#4F0A94"]}
         // start={{ x: 0, y: 0.43 }}
@@ -158,6 +148,36 @@ const Coins = () => {
           </Stack>
         </Stack>
       </LinearGradient>
+
+      <View
+        style={{
+          width: "107%",
+        }}
+      >
+        <Card
+          containerStyle={{
+            borderRadius: 10,
+            // shadowColor: "#dadada",
+            shadowOffset: { width: -2, height: 4 },
+            shadowOpacity: 0.4,
+            shadowRadius: 2,
+            elevation: 5,
+            borderWidth: 0,
+          }}
+        >
+          <Text h3>Scavenger Hunt</Text>
+
+          <Card.Divider />
+          <Card.Image
+            style={{ borderRadius: 9 }}
+            source={require("@/assets/images/Scavenger_hunt.png")}
+          />
+          <Text style={{ fontSize: 15, paddingVertical: 5 }}>Mar 29</Text>
+          <Text style={{ fontSize: 15, paddingVertical: 5 }}>
+            Join our Scavenger hunt at the student center to earn more points
+          </Text>
+        </Card>
+      </View>
     </View>
   );
 };
