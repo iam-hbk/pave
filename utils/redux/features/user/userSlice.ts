@@ -1,4 +1,5 @@
 import { User } from "@/types/user";
+import { removeUserTokenFromLocalStorage } from "@/utils/helpers";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Type of the userSlice State
@@ -8,29 +9,7 @@ type UserSliceState = {
 
 const initialState: UserSliceState = {
   //initial state is null, this is just for testing
-  user: {
-    id: 3,
-    name: "Clementine Bauch",
-    username: "Samantha",
-    email: "Nathan@yesenia.net",
-    address: {
-      street: "Douglas Extension",
-      suite: "Suite 847",
-      city: "McKenziehaven",
-      zipcode: "59590-4157",
-      geo: {
-        lat: "-68.6102",
-        lng: "-47.0653",
-      },
-    },
-    phone: "1-463-123-4447",
-    website: "ramiro.info",
-    company: {
-      name: "Romaguera-Jacobson",
-      catchPhrase: "Face to face bifurcated interface",
-      bs: "e-enable strategic applications",
-    },
-  },
+  user: null,
 };
 
 export const userSlice = createSlice({
@@ -41,6 +20,7 @@ export const userSlice = createSlice({
       state.user = action.payload;
     },
     unSetUser: (state) => {
+      removeUserTokenFromLocalStorage();
       state.user = null;
     },
     updateUser: (state, action: PayloadAction<User>) => {

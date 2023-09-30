@@ -18,7 +18,10 @@ import themeColors from "@/assets/colors";
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
 import axios from "axios";
-import CoinIconAndAmount from "./CoinIconAndAmount";
+import CoinIconAndAmount from "./CoinIconAndAmount";import Toast from "react-native-toast-message";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/utils/redux/features/user/userSlice";
+
 const HomeHeader = ({
   navigation,
   route,
@@ -32,6 +35,7 @@ const HomeHeader = ({
   let quote: string;
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
+  const user = useSelector(selectUser);
   const icons = [
     { component: <SchoolHat />, route: "/(app)/home/school" },
     { component: <QuizIcon />, route: "/(app)/home/quiz" },

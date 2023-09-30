@@ -1,56 +1,70 @@
-import { RegisterProps, User } from "@/types";
-import wretch from "wretch";
+import { LoginProps, RegisterProps, User } from "@/types";
+import api from "../../api";
+import { setUserTokenToLocalStorage } from "@/utils/helpers";
 
-const api = wretch("https://jsonplaceholder.typicode.com")
-  .errorType("json")
-  .resolve((r) => r.json());
-
-export async function loginUser(userEmail: string): Promise<User> {
+export async function loginUser({
+  email,
+  password,
+}: LoginProps): Promise<User> {
   try {
-    const user = await api.get(`/users?email=${userEmail}`);
-    console.log(user);
-    return user as User;
+    const responseData: any = await api.url("/users/login").post({
+      email,
+      password,
+    });
+
+    const user: User = {
+      _id: responseData.user._id,
+      email: responseData.user.email,
+      role: responseData.user.role,
+      name: responseData.user.name,
+      profilePicture: responseData.user.profilePicture,
+      wallet: responseData.user.wallet,
+      token: responseData.token,
+    };
+
+    // Save the user data to local storage
+    await setUserTokenToLocalStorage(user);
+
+    return user;
   } catch (error) {
-    throw Error();
+    throw Error((error as Error).message);
   }
 }
 
 export async function registerUser({
-  username,
+  name,
   email,
   password,
+  role = "Student",
 }: RegisterProps): Promise<User> {
-  console.log(username, email, password);
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const res: User = {
-        id: 3,
-        name: "Clementine Bauch",
-        username: "Samantha",
-        email: "Nathan@yesenia.net",
-        address: {
-          street: "Douglas Extension",
-          suite: "Suite 847",
-          city: "McKenziehaven",
-          zipcode: "59590-4157",
-          geo: {
-            lat: "-68.6102",
-            lng: "-47.0653",
-          },
-        },
-        phone: "1-463-123-4447",
-        website: "ramiro.info",
-        company: {
-          name: "Romaguera-Jacobson",
-          catchPhrase: "Face to face bifurcated interface",
-          bs: "e-enable strategic applications",
-        },
-      };
-      resolve(res);
-    }, 3000);
-  });
+  try {
+    const responseData: any = await api.url("/users/register").post({
+      email,
+      password,
+      name,
+      role,
+    });
+
+    const user: User = {
+      _id: responseData.user._id,
+      email: responseData.user.email,
+      role: responseData.user.role,
+      name: responseData.user.name,
+      profilePicture: responseData.user.profilePicture,
+      wallet: responseData.user.wallet,
+      token: responseData.token,
+    };
+
+    // Save the user data to local storage
+    await setUserTokenToLocalStorage(user);
+
+    return user;
+  } catch (error) {
+    throw Error((error as Error).message);
+  }
 }
 
+//This is for the forgot password api
 export async function verifyUser(email: string): Promise<{ code: string }> {
   return new Promise((resolve) => {
     setTimeout(() => {
