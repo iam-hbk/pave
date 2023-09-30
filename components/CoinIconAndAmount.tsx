@@ -4,10 +4,13 @@ import React, { useEffect, useState } from "react";
 import { Text, Button, useTheme } from "@rneui/themed";
 import { GoldenCoin } from "@/components/icons";
 import themeColors from "@/assets/colors";
+import { selectUser } from "@/utils/redux/features/user/userSlice";
+import { useSelector } from "react-redux";
 
 // import { useTheme } from "@rneui/themed";
 const CoinIconAndAmount = () => {
   const { theme } = useTheme();
+  const user = useSelector(selectUser);
 
   return (
     <View
@@ -40,12 +43,11 @@ const CoinIconAndAmount = () => {
             color: theme.colors.grey3,
           }}
         >
-          3500
+          {user?.wallet}
         </Text>
       </View>
     </View>
   );
 };
-
 
 export default CoinIconAndAmount;
