@@ -18,7 +18,8 @@ import themeColors from "@/assets/colors";
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
 import axios from "axios";
-import CoinIconAndAmount from "./CoinIconAndAmount";import Toast from "react-native-toast-message";
+import CoinIconAndAmount from "./CoinIconAndAmount";
+import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/utils/redux/features/user/userSlice";
 
