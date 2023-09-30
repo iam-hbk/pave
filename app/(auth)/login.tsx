@@ -13,7 +13,13 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 const LoginSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email").required("Email is required"),
+  email: Yup.string()
+    .email("Invalid email")
+    .required("Email is required")
+    .matches(
+      /^\d{9}@student\.uj\.ac\.za$/,
+      "Please enter a valid UJ student email address <student_number>@student.uj.ac.za"
+    ),
   password: Yup.string().required("Password is required"),
 });
 
@@ -41,7 +47,6 @@ const Login = () => {
       });
       router.replace("/(app)/home/main");
     } catch (error: any) {
-      console.log("[LOGIN]:",error);
       Toast.show({
         type: "error",
         position: "top",
