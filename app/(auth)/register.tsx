@@ -48,7 +48,6 @@ const Register = () => {
     };
     try {
       const result = await registerUser(v);
-      console.log("============Result:", result);
       dispatch(setUser(result));
       Toast.show({
         type: "success",
@@ -134,7 +133,6 @@ const Register = () => {
                     }}
                   />
                 }
-                onFocus={(e) => console.log("Focus", e)}
                 placeholder="Enter your name and surname"
                 onChangeText={handleChange("name")}
                 onBlur={handleBlur("name")}

@@ -19,7 +19,6 @@ const Profile = () => {
   //for the button group, leaderboard categories
   const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
   const user = useSelector(selectUser);
-  console.log(user);
   //will later be coming from the user object
   const userprofilePicture =
     "https://images.unsplash.com/photo-1517849845537-4d257902454a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1635&q=80";

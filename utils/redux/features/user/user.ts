@@ -38,14 +38,27 @@ export async function registerUser({
   role = "Student",
 }: RegisterProps): Promise<User> {
   try {
-    const user = await api.url("/users/register").post({
+    const responseData: any = await api.url("/users/register").post({
       email,
       password,
       name,
       role,
     });
-    console.log("[user-api/register]\tLOGGED IN:", user);
-    return user as User;
+
+    const user: User = {
+      _id: responseData.user._id,
+      email: responseData.user.email,
+      role: responseData.user.role,
+      name: responseData.user.name,
+      profilePicture: responseData.user.profilePicture,
+      wallet: responseData.user.wallet,
+      token: responseData.token,
+    };
+
+    // Save the user data to local storage
+    await setUserTokenToLocalStorage(user);
+
+    return user;
   } catch (error) {
     throw Error((error as Error).message);
   }
