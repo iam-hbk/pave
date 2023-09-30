@@ -84,6 +84,40 @@ export function ActivityIcon(props: IconProps) {
   );
 }
 
+export function CheckedInIcon(props: IconProps) {
+  return (
+    <Svg
+      // xmlns="http://www.w3.org/2000/svg"
+      width={25}
+      height={26}
+      fill="none"
+      {...props}
+    >
+      <Path
+        fill="#4E018F"
+        d="M12.048.585c-6.6 0-12 5.625-12 12.5s5.4 12.5 12 12.5 12-5.625 12-12.5-5.4-12.5-12-12.5Zm-2.4 18.75-6-6.25 1.692-1.762 4.308 4.475 9.108-9.488 1.692 1.775-10.8 11.25Z"
+      />
+    </Svg>
+  );
+}
+
+export function CheckedInIconToday(props: IconProps) {
+  return (
+    <Svg
+      // xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={25}
+      fill="none"
+      {...props}
+    >
+      <Path
+        fill="#FFF9E6"
+        d="M12 0C5.4 0 0 5.625 0 12.5S5.4 25 12 25s12-5.625 12-12.5S18.6 0 12 0ZM9.6 18.75l-6-6.25 1.692-1.762L9.6 15.213l9.108-9.488L20.4 7.5 9.6 18.75Z"
+      />
+    </Svg>
+  );
+}
+
 export function PaveCoins(props: IconProps) {
   return (
     <Svg

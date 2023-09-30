@@ -1,6 +1,7 @@
-import { View } from "react-native";
+import { View, Animated } from "react-native";
+import { OPENAI_API_KEY } from "@env";
 import { Input, Text, useTheme } from "@rneui/themed";
-import React from "react";
+import React, { Children, useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Coin,
@@ -16,6 +17,8 @@ import { DrawerHeaderProps } from "@react-navigation/drawer";
 import themeColors from "@/assets/colors";
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
+import axios from "axios";
+import CoinIconAndAmount from "./CoinIconAndAmount";
 import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/utils/redux/features/user/userSlice";
@@ -25,7 +28,12 @@ const HomeHeader = ({
   route,
   options,
   layout,
-}: DrawerHeaderProps) => {
+  children,
+}: DrawerHeaderProps & { children?: React.ReactNode }) => {
+  const scrollY = React.useRef(new Animated.Value(0)).current;
+
+  const [theQuote, setTheQuote] = React.useState<string>("Loading..."); // [1
+  let quote: string;
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   const user = useSelector(selectUser);
@@ -35,26 +43,91 @@ const HomeHeader = ({
     { component: <QRIcon increaseBy={-6} />, route: "/(app)/home/qr" },
     { component: <Coin />, route: "/(app)/home/coin" },
   ];
+
+  async function generateShortCode(): Promise<string> {
+    try {
+      const response = await axios.post(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          model: "gpt-3.5-turbo",
+          messages: [
+            {
+              role: "system",
+              content:
+                "Generate only one,short,funny quote to motivate student,  be creative, keep it to one short line, max 10 words.",
+            },
+          ],
+          // max_tokens: 2000,
+          // n: 1,
+          // stop: null,
+          // temperature: 0.5,
+          // top_p: 1.0,
+          // frequency_penalty: 0.0,
+          // presence_penalty: 0.0,,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${OPENAI_API_KEY}`,
+          },
+        }
+      );
+
+      // Check if the response has the 'choices' property and at least one choice
+      if (
+        response &&
+        response.data &&
+        response.data.choices &&
+        response.data.choices.length > 0
+      ) {
+        console.log(response.data.choices[0].message.content);
+        return response.data.choices[0].message.content;
+      } else {
+        console.error(
+          "Error: Unexpected response format from OpenAI API. Status:",
+          response.status,
+          "Data:",
+          response.data
+        );
+        return "";
+      }
+    } catch (error) {
+      console.error("Error during summary and action steps generation:", error);
+      return "Leave Snapchat, It will still be there tomorrow";
+    }
+  }
+
+  useEffect(() => {
+    generateShortCode().then((data) => {
+      quote = data;
+      // remove the double quote from the string
+      quote = quote.replace('"', "");
+      quote = quote.replace('"', "");
+      quote = quote.replace('"', "");
+      setTheQuote(quote);
+    });
+  }, []);
+
+  const headerHeight = scrollY.interpolate({
+    inputRange: [0, 100], // adjust based on your needs
+    outputRange: [300, 60], // adjust based on your needs
+    extrapolate: "clamp",
+  });
   return (
-    <View
+    <Animated.View
       // intensity={100}
       style={{
+        height: headerHeight,
         paddingTop: insets.top,
         paddingBottom: 20,
         paddingLeft: insets.left + 18,
         paddingRight: insets.right + 18,
         gap: 10,
-        // height: 300,
-        // borderWidth: 1,
         backgroundColor: themeColors.white,
-
-        // iOS shadow properties
         shadowColor: "#dadada",
         shadowOffset: { width: -1, height: 4 },
         shadowOpacity: 0.5,
         shadowRadius: 2,
-
-        // Android shadow properties
         elevation: 5,
         borderBottomRightRadius: 30,
         borderBottomLeftRadius: 30,
@@ -72,41 +145,7 @@ const HomeHeader = ({
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <HambergerMenu />
         </TouchableOpacity>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-
-            borderWidth: 1,
-            borderColor: themeColors.grey0,
-            paddingVertical: 5,
-            paddingHorizontal: 10,
-            gap: 10,
-            borderRadius: 10,
-          }}
-        >
-          <GoldenCoin increaseBy={-25} />
-          <View
-            style={{
-              // backgroundColor: "#FFEDB0",
-              paddingVertical: 5,
-              // paddingHorizontal: 10,
-              zIndex: -1,
-              borderRadius: 10,
-              // marginLeft: -30,
-              // paddingLeft: 35,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 20,
-                color: theme.colors.grey3,
-              }}
-            >
-              {user?.wallet}
-            </Text>
-          </View>
-        </View>
+        <CoinIconAndAmount />
       </View>
 
       <View
@@ -117,14 +156,16 @@ const HomeHeader = ({
         }}
       >
         <Logo increaseBy={25} />
-        <Text
-          h4
-          style={{
-            color: theme.colors.grey3,
+        {theQuote && (
+          <Text
+            h4
+          h4Style={{
+            fontSize: 14,
           }}
-        >
-          ~My GPA is like my coffee, it's high until I get to class.
-        </Text>
+          >
+            {/* {quote ? quote : "Loading..."}  */}~{theQuote}
+          </Text>
+        )}
       </View>
       <View
         style={{
@@ -153,7 +194,17 @@ const HomeHeader = ({
           </TouchableOpacity>
         ))}
       </View>
-    </View>
+
+      <Animated.ScrollView
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false } // Remember to set this to false since height is not supported by native driver
+        )}
+        scrollEventThrottle={16} // Use this to control the scroll event frequency
+      >
+        {children}
+      </Animated.ScrollView>
+    </Animated.View>
   );
 };
 
