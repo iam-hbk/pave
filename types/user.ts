@@ -6,6 +6,7 @@ export type User = {
   profilePicture?: string; // url
   wallet: number;
   token: string;
+  localRank?: number;
 };
 export type RegisterProps = {
   email: string;

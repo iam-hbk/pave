@@ -53,7 +53,6 @@ export async function setUserTokenToLocalStorage(token: User): Promise<void> {
 export async function getUserTokenFromLocalStorage(): Promise<User | null> {
   try {
     const tokenString = await AsyncStorage.getItem("token");
-    console.log("tokenString:", tokenString);
     return tokenString ? JSON.parse(tokenString) : null;
   } catch (error) {
     throw error;
@@ -63,6 +62,32 @@ export async function getUserTokenFromLocalStorage(): Promise<User | null> {
 export async function removeUserTokenFromLocalStorage(): Promise<void> {
   try {
     await AsyncStorage.removeItem("token");
+  } catch (error) {
+    throw error;
+  }
+}
+
+//function to keep track of the user's ranking locally
+export async function setRankingToLocalStorage(ranking: number): Promise<void> {
+  try {
+    await AsyncStorage.setItem("ranking", JSON.stringify(ranking));
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getRankingFromLocalStorage(): Promise<number | null> {
+  try {
+    const rankingString = await AsyncStorage.getItem("ranking");
+    return rankingString ? JSON.parse(rankingString) : null;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function removeRankingFromLocalStorage(): Promise<void> {
+  try {
+    await AsyncStorage.removeItem("ranking");
   } catch (error) {
     throw error;
   }
