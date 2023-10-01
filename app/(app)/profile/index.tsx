@@ -14,7 +14,8 @@ import { Stack } from "@rneui/layout";
 import { selectUser, unSetUser } from "@/utils/redux/features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { PaveCoins, ActivityIcon, TrophyIcon } from "@/components/icons";
-import LeaderboardItem from "@/components/LeaderboardItem";
+import LeaderboardItem from "@/components/leaderboardItem";
+
 const Profile = () => {
   //for the button group, leaderboard categories
   const [selectedIndex, setSelectedIndex] = React.useState<number>(0);

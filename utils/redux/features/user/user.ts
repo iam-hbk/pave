@@ -1,6 +1,8 @@
 import { LoginProps, RegisterProps, User } from "@/types";
 import api from "../../api";
 import { setUserTokenToLocalStorage } from "@/utils/helpers";
+import axios from "axios";
+import { OPENAI_API_KEY } from "@env";
 
 export async function loginUser({
   email,
@@ -61,6 +63,60 @@ export async function registerUser({
     return user;
   } catch (error) {
     throw Error((error as Error).message);
+  }
+}
+
+//function to generate a random quote
+export async function generateShortCode(): Promise<string> {
+  try {
+    const response = await axios.post(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content:
+              "Generate only one,short,funny quote to motivate student,  be creative, keep it to one short line, max 10 words.",
+          },
+        ],
+        // max_tokens: 2000,
+        // n: 1,
+        // stop: null,
+        // temperature: 0.5,
+        // top_p: 1.0,
+        // frequency_penalty: 0.0,
+        // presence_penalty: 0.0,,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${OPENAI_API_KEY}`,
+        },
+      }
+    );
+
+    // Check if the response has the 'choices' property and at least one choice
+    if (
+      response &&
+      response.data &&
+      response.data.choices &&
+      response.data.choices.length > 0
+    ) {
+      console.log(response.data.choices[0].message.content);
+      return response.data.choices[0].message.content;
+    } else {
+      console.error(
+        "Error: Unexpected response format from OpenAI API. Status:",
+        response.status,
+        "Data:",
+        response.data
+      );
+      return "";
+    }
+  } catch (error) {
+    console.error("Error during summary and action steps generation:", error);
+    return "Leave Snapchat, It will still be there tomorrow";
   }
 }
 

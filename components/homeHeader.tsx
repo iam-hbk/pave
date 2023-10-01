@@ -1,5 +1,4 @@
 import { View, Animated } from "react-native";
-import { OPENAI_API_KEY } from "@env";
 import { Input, Text, useTheme } from "@rneui/themed";
 import React, { Children, useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -15,13 +14,9 @@ import {
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { DrawerHeaderProps } from "@react-navigation/drawer";
 import themeColors from "@/assets/colors";
-import { BlurView } from "expo-blur";
 import { router } from "expo-router";
-import axios from "axios";
-import CoinIconAndAmount from "./CoinIconAndAmount";
-import Toast from "react-native-toast-message";
-import { useSelector } from "react-redux";
-import { selectUser } from "@/utils/redux/features/user/userSlice";
+import CoinIconAndAmount from "./coinIconAndAmount";
+import { generateShortCode } from "@/utils/redux/features/user/user";
 
 const HomeHeader = ({
   navigation,
@@ -35,67 +30,13 @@ const HomeHeader = ({
   const [theQuote, setTheQuote] = React.useState<string>("Loading..."); // [1
   let quote: string;
   const insets = useSafeAreaInsets();
-  const { theme } = useTheme();
-  const user = useSelector(selectUser);
+
   const icons = [
     { component: <SchoolHat />, route: "/(app)/home/school" },
     { component: <QuizIcon />, route: "/(app)/home/quiz" },
     { component: <QRIcon increaseBy={-6} />, route: "/(app)/home/qr" },
     { component: <Coin />, route: "/(app)/home/coin" },
   ];
-
-  async function generateShortCode(): Promise<string> {
-    try {
-      const response = await axios.post(
-        "https://api.openai.com/v1/chat/completions",
-        {
-          model: "gpt-3.5-turbo",
-          messages: [
-            {
-              role: "system",
-              content:
-                "Generate only one,short,funny quote to motivate student,  be creative, keep it to one short line, max 10 words.",
-            },
-          ],
-          // max_tokens: 2000,
-          // n: 1,
-          // stop: null,
-          // temperature: 0.5,
-          // top_p: 1.0,
-          // frequency_penalty: 0.0,
-          // presence_penalty: 0.0,,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${OPENAI_API_KEY}`,
-          },
-        }
-      );
-
-      // Check if the response has the 'choices' property and at least one choice
-      if (
-        response &&
-        response.data &&
-        response.data.choices &&
-        response.data.choices.length > 0
-      ) {
-        console.log(response.data.choices[0].message.content);
-        return response.data.choices[0].message.content;
-      } else {
-        console.error(
-          "Error: Unexpected response format from OpenAI API. Status:",
-          response.status,
-          "Data:",
-          response.data
-        );
-        return "";
-      }
-    } catch (error) {
-      console.error("Error during summary and action steps generation:", error);
-      return "Leave Snapchat, It will still be there tomorrow";
-    }
-  }
 
   useEffect(() => {
     generateShortCode().then((data) => {
@@ -159,11 +100,11 @@ const HomeHeader = ({
         {theQuote && (
           <Text
             h4
-          h4Style={{
-            fontSize: 14,
-          }}
+            h4Style={{
+              fontSize: 14,
+            }}
           >
-            {/* {quote ? quote : "Loading..."}  */}~{theQuote}
+            ~{theQuote}
           </Text>
         )}
       </View>
