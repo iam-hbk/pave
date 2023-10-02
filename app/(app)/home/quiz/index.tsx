@@ -47,7 +47,7 @@ const Quiz = (props: Props) => {
             textTransform: "capitalize",
           }}
         >
-          Hi {user?.name.split(" ")[0]},
+          👋🏽 Hi {user?.name.split(" ")[0]},
         </Text>
         <Text
           style={{
@@ -133,7 +133,7 @@ const Quiz = (props: Props) => {
                   color: themeColors.tertiaryShaded[900],
                 }}
               >
-                {user?.wallet || 2400}
+                {user?.wallet}
               </Text>
               <Text>Pave coins</Text>
             </View>

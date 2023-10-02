@@ -19,3 +19,8 @@ export type LoginProps = {
   email: string;
   password: string;
 };
+
+export type LocalStorageUser = {
+  _id: string;
+  token: string;
+};

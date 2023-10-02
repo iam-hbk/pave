@@ -1,5 +1,6 @@
 import { View, ActivityIndicator } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
+import { getUserTokenFromLocalStorage } from "@/utils/helpers";
 
 const PrepareApp = () => {
   return (

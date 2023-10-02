@@ -20,9 +20,9 @@ import { generateShortCode } from "@/utils/redux/features/user/user";
 
 const HomeHeader = ({
   navigation,
-  route,
-  options,
-  layout,
+  // route,
+  // options,
+  // layout,
   children,
 }: DrawerHeaderProps & { children?: React.ReactNode }) => {
   const scrollY = React.useRef(new Animated.Value(0)).current;
@@ -49,18 +49,14 @@ const HomeHeader = ({
     });
   }, []);
 
-  const headerHeight = scrollY.interpolate({
-    inputRange: [0, 100], // adjust based on your needs
-    outputRange: [300, 60], // adjust based on your needs
-    extrapolate: "clamp",
-  });
   return (
     <Animated.View
       // intensity={100}
       style={{
-        height: headerHeight,
+        height: "auto",
+        maxHeight: 315,
         paddingTop: insets.top,
-        paddingBottom: 20,
+        paddingBottom: 12,
         paddingLeft: insets.left + 18,
         paddingRight: insets.right + 18,
         gap: 10,

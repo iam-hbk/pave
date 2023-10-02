@@ -1,9 +1,9 @@
 import { format, addHours } from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BaseToast, ErrorToast, ToastProps } from "react-native-toast-message";
+import Toast, { BaseToast, ErrorToast, ToastProps } from "react-native-toast-message";
 import themeColors from "@/assets/colors";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
-import { User } from "@/types";
+import { LocalStorageUser, User } from "@/types";
 interface Coordinate {
   lat: number;
   long: number;
@@ -42,20 +42,39 @@ export function formatDateToHHMM(date: Date): string {
   return format(date, "HH:mm");
 }
 
-export async function setUserTokenToLocalStorage(token: User): Promise<void> {
+export async function setUserTokenToLocalStorage(token: LocalStorageUser): Promise<void> {
   try {
     await AsyncStorage.setItem("token", JSON.stringify(token));
   } catch (error) {
-    throw error;
+    console.log("Error saving user token to local storage", error);
+    Toast.show({
+      type: "error",
+      position: "top",
+      text1: "Error",
+      text2: "An error occurred while trying to save your login details",
+      visibilityTime: 4000,
+      autoHide: true,
+      topOffset: 50,
+    });
   }
 }
 
-export async function getUserTokenFromLocalStorage(): Promise<User | null> {
+export async function getUserTokenFromLocalStorage(): Promise<LocalStorageUser | null> {
   try {
     const tokenString = await AsyncStorage.getItem("token");
     return tokenString ? JSON.parse(tokenString) : null;
   } catch (error) {
-    throw error;
+    console.log("Error getting user token to local storage", error);
+    Toast.show({
+      type: "error",
+      position: "top",
+      text1: "Error",
+      text2: "An error occurred while trying to get local details",
+      visibilityTime: 4000,
+      autoHide: true,
+      topOffset: 50,
+    });
+    return null;
   }
 }
 

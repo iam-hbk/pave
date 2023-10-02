@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { RefreshControl, StyleSheet, View } from "react-native";
 import React, { useRef } from "react";
 import { Link, useNavigation, useRouter } from "expo-router";
 import { Button, Card, ListItem, Text } from "@rneui/themed";
@@ -14,6 +14,7 @@ import { selectQuestions } from "@/utils/redux/features/questions/questionSlice"
 import { LinearProgress } from "@rneui/themed";
 import DailyQuestionModal from "@/components/dailyQuestionModal";
 import HomeHeader from "@/components/homeHeader";
+import { useRefreshUser } from "@/hooks/useRefreshUser";
 
 interface Task {
   id: number;
@@ -70,23 +71,13 @@ const Home = () => {
   //or status bar component, refer to the docs for more info.
   //https://reactnavigation.org/docs/handling-safe-area/
   const insets = useSafeAreaInsets();
-
-  // React.useEffect(() => {
-  //   let subs = true;
-  //   if (progress < 1 && progress !== 0) {
-  //     setTimeout(() => {
-  //       if (subs) {
-  //         setProgress(progress + 0.1);
-  //       }
-  //     }, 100);
-  //   }
-  //   return () => {
-  //     subs = false;
-  //   };
-  // }, [progress]);
+  const { refreshing, handleRefresh } = useRefreshUser();
 
   return (
     <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+      }
       contentContainerStyle={{
         paddingHorizontal: 20,
         gap: 20,
