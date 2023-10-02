@@ -1,6 +1,6 @@
 import React from "react";
-import { Tabs } from "expo-router";
-
+import { Tabs, router } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 import {
   HomeFilled,
   HomeOutlined,
@@ -9,6 +9,7 @@ import {
 } from "@/components/icons";
 
 const App = () => {
+  const navigation = useNavigation();
   return (
     <Tabs
       screenOptions={{
@@ -23,6 +24,11 @@ const App = () => {
           tabBarShowLabel: false, //For now
           tabBarIcon: ({ focused }) => {
             return !focused ? <HomeOutlined /> : <HomeFilled />;
+          },
+        }}
+        listeners={{
+          tabPress: (e) => {
+            (navigation.navigate as any)("home", { screen: "main" });
           },
         }}
       />

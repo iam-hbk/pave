@@ -10,6 +10,7 @@ import { Coin } from "@/components/icons";
 import theme from "@/assets/theme";
 import themeColors from "@/assets/colors";
 import { Ionicons } from "@expo/vector-icons";
+import RankingCard from "@/components/rankCard";
 
 type Props = {};
 
@@ -26,7 +27,6 @@ const Quiz = (props: Props) => {
       }}
       contentContainerStyle={{
         flex: 1,
-        borderWidth: 1,
         alignItems: "center",
         justifyContent: "flex-start",
         paddingVertical: 20,
@@ -49,19 +49,26 @@ const Quiz = (props: Props) => {
         >
           Hi {user?.name.split(" ")[0]},
         </Text>
-        <Text h4>Great to see you again !</Text>
+        <Text
+          style={{
+            fontSize: 18,
+            color: themeColors.grey2,
+          }}
+        >
+          Great to see you again !
+        </Text>
       </View>
 
       <View
         style={{
-          flexDirection: "row",
           alignItems: "center",
+          justifyContent: "center",
           width: "100%",
           height: "22%",
           //shadow
           shadowColor: themeColors.tertiaryDark,
           shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: .5,
+          shadowOpacity: 0.5,
           shadowRadius: 10,
           elevation: 5,
         }}
@@ -83,30 +90,11 @@ const Quiz = (props: Props) => {
             height: "100%",
             flexDirection: "row",
             alignItems: "center",
+            justifyContent: "space-around",
             // width: "100%",
             // height: "22%",
             borderRadius: 15,
-            overflow: "hidden",
-            justifyContent: "center",
-            gap: 20,
-            
           }}
-          //   style={{
-          //     width: "100%",
-          //     height: "22%",
-          //     borderRadius: 15,
-          //     overflow: "hidden",
-          //     flexDirection: "row",
-          //     alignItems: "center",
-          //     justifyContent: "center",
-          //     gap: 20,
-          //     //shadow
-          //     shadowColor: themeColors.black,
-          //     shadowOffset: { width: 0, height: 2 },
-          //     shadowOpacity: 1,
-          //     shadowRadius: 20,
-          //     elevation: 5,
-          //   }}
         >
           <View
             style={{
@@ -141,10 +129,11 @@ const Quiz = (props: Props) => {
                 h2
                 h2Style={{
                   fontSize: 30,
-                  color: themeColors.white,
+                  fontFamily: "UrbanistBlack",
+                  color: themeColors.tertiaryShaded[900],
                 }}
               >
-                {user?.wallet}
+                {user?.wallet || 2400}
               </Text>
               <Text>Pave coins</Text>
             </View>
@@ -188,18 +177,7 @@ const Quiz = (props: Props) => {
                 color={themeColors.tertiaryDark}
               />
             </View>
-            <View>
-              <Text
-                h2
-                h2Style={{
-                  fontSize: 30,
-                  color: themeColors.white,
-                }}
-              >
-                {user?.wallet}
-              </Text>
-              <Text>Pave coins</Text>
-            </View>
+            <RankingCard />
           </View>
         </LinearGradient>
       </View>

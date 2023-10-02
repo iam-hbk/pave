@@ -66,6 +66,23 @@ export async function registerUser({
   }
 }
 
+interface ErrorResponse {
+  message: string;
+}
+// Usage within your function
+export async function getUserRanking(userId: string): Promise<number> {
+  try {
+    const responseData: any = await api.url(`/users/ranking/${userId}`).get();
+    return responseData.ranking;
+  } catch (error) {
+    const apiError = error as ErrorResponse;
+    const message: string = JSON.parse(apiError.message).message;
+
+    // console.log("\n\n\n[API] Error Response:\n", JSON.stringify(error, null, 2));
+    throw Error(message);
+  }
+}
+
 //function to generate a random quote
 export async function generateShortCode(): Promise<string> {
   try {
