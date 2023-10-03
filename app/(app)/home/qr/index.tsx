@@ -1,25 +1,33 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform, Linking } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Text, Button } from "@rneui/themed";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import { Dimensions } from "react-native";
+import { useFocusEffect } from "expo-router";
 import { router } from "expo-router";
 // const barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
 
 const QR = () => {
   const [hasPermission, setHasPermission] = useState<boolean>();
   const [scanned, setScanned] = useState(false);
-  const { width, height } = Dimensions.get("window");
 
+  const getBarCodeScannerPermissions = async () => {
+    const { status } = await BarCodeScanner.requestPermissionsAsync();
+    setHasPermission(status === "granted");
+  };
   useEffect(() => {
-    const getBarCodeScannerPermissions = async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === "granted");
-    };
-
     getBarCodeScannerPermissions();
   }, [hasPermission]);
+  useFocusEffect(
+    React.useCallback(() => {
+      // This function is called when the screen comes into focus
+      setScanned(false);
 
+      return () => {
+        // This function is called when the screen goes out of focus
+        setScanned(true);
+      };
+    }, [])
+  );
   const handleBarCodeScanned = ({
     type,
     data,
@@ -39,7 +47,28 @@ const QR = () => {
     return <Text>Requesting for camera permission</Text>;
   }
   if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 20,
+        }}
+      >
+        <Text h3>No access to camera</Text>
+        <Button
+          title="Allow Camera Access"
+          onPress={() => {
+            if (Platform.OS === "ios") {
+              Linking.openURL("app-settings:");
+            } else {
+              Linking.openSettings();
+            }
+          }}
+        />
+      </View>
+    );
   }
   return (
     <View

@@ -36,4 +36,7 @@ export const { setUser, unSetUser, updateUser } = userSlice.actions;
 //Selectors
 export const selectUser = (state: { user: UserSliceState }) => state.user.user;
 
+export const selectUserToken = (state: { user: UserSliceState }) => {
+  return state.user.user?.token;
+};
 export default userSlice.reducer;

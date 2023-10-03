@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUser, setUser } from "@/utils/redux/features/user/userSlice";
 import { getUser } from "@/utils/redux/features/user/user";
 import { User } from "@/types";
+
 export const useRefreshUser = () => {
   const [refreshing, setRefreshing] = useState(false);
   const user = useSelector(selectUser) as User;
@@ -23,7 +24,7 @@ export const useRefreshUser = () => {
     } finally {
       setRefreshing(false);
     }
-  }, []);
+  }, [dispatch, user]);
 
   return {
     refreshing,

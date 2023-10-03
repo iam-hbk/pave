@@ -10,7 +10,11 @@ import { useEffect } from "react";
 import theme from "@/assets/theme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
 import { getUserTokenFromLocalStorage, toastConfig } from "@/utils/helpers";
 import { setUser } from "@/utils/redux/features/user/userSlice";
@@ -69,17 +73,17 @@ function RootLayoutNav() {
 
 function App() {
   const dispatch = useDispatch();
+
   async function onStartUp() {
     const tokenObject = await getUserTokenFromLocalStorage();
-    console.log("TOKEN OBJECT:", tokenObject);
-
     if (tokenObject) {
       try {
         const user = await getUser(tokenObject._id, tokenObject.token);
         dispatch(setUser(user));
+
         router.replace("/home");
       } catch (error) {
-        console.log("Error getting user details", error);
+        console.log("Error getting user details", JSON.stringify(error, null, 2));
         const message = JSON.parse((error as Error).message).message;
         Toast.show({
           type: "error",

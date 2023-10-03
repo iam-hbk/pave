@@ -6,7 +6,7 @@ export type User = {
   profilePicture?: string; // url
   wallet: number;
   token: string;
-  localRank?: number;
+  modules: string[];
 };
 export type RegisterProps = {
   email: string;

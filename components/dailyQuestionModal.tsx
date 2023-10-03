@@ -1,27 +1,29 @@
 import { View, StyleSheet, ScrollView, Modal } from "react-native";
 import React from "react";
 import { useSelector } from "react-redux";
-import { selectQuestionById } from "@/utils/redux/features/questions/questionSlice";
 import { LinearGradient } from "expo-linear-gradient";
 import { Button, Text, useTheme } from "@rneui/themed";
 import themeColors from "@/assets/colors";
 import { ListItem, ButtonGroup } from "@rneui/themed";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { selectQuestion } from "@/utils/redux/features/questions/questionSlice";
+import { DailyQuestion } from "@/types";
 
 interface DailyQuestionModalProps {
-  dailyQuestionId: string;
   isVisible: boolean;
   onClose: () => void;
+  question: DailyQuestion;
 }
 
 const DailyQuestionModal = ({
-  dailyQuestionId,
   isVisible,
   onClose,
+  question,
 }: DailyQuestionModalProps) => {
   const [answer, setAnswer] = React.useState<string>("");
-  const question = useSelector(selectQuestionById(dailyQuestionId));
   const { theme } = useTheme();
+
+  if (!question) return null;
 
   return (
     <Modal
@@ -73,7 +75,7 @@ const DailyQuestionModal = ({
                 color: theme.colors.white,
               }}
             >
-              {question?.question}
+              {question?.questionText}
             </Text>
             <View>
               {question?.options.map((option, index) => (

@@ -24,7 +24,7 @@ const Profile = () => {
   const userprofilePicture =
     "https://images.unsplash.com/photo-1517849845537-4d257902454a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1635&q=80";
   const dispatch = useDispatch();
-const {width,height} = Dimensions.get('window')
+  const { width, height } = Dimensions.get("window");
   const handleLogout = () => {
     dispatch(unSetUser());
     router.replace("/(auth)/welcome");
@@ -215,7 +215,11 @@ const {width,height} = Dimensions.get('window')
             padding: 10,
           }}
         >
-          <Avatar rounded source={{ uri: userprofilePicture }} size={100} />
+          <Avatar
+            rounded
+            source={{ uri: user?.profilePicture || userprofilePicture }}
+            size={100}
+          />
           <Text h4>{user ? user?.name : "Sanah R"}</Text>
         </Stack>
         <Text h4>My Profile</Text>

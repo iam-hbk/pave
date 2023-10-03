@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import React from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -7,16 +7,20 @@ import { selectUser } from "@/utils/redux/features/user/userSlice";
 import { Text } from "@rneui/themed";
 import { LinearGradient } from "expo-linear-gradient";
 import { Coin } from "@/components/icons";
-import theme from "@/assets/theme";
 import themeColors from "@/assets/colors";
 import { Ionicons } from "@expo/vector-icons";
 import RankingCard from "@/components/rankCard";
+import DailyQuestion from "@/components/dailyQuestion";
+import ClassQuizes from "@/components/classQuizzes";
 
 type Props = {};
 
 const Quiz = (props: Props) => {
   const insets = useSafeAreaInsets();
   const user = useSelector(selectUser);
+  const [isModalQuestionVisible, setIsModalQuestionVisible] =
+    React.useState<boolean>(false);
+
   return (
     <ScrollView
       style={{
@@ -181,6 +185,63 @@ const Quiz = (props: Props) => {
           </View>
         </LinearGradient>
       </View>
+
+      <Text
+        h2
+        h2Style={{
+          alignSelf: "flex-start",
+          fontSize: 25,
+          fontFamily: "UrbanistBold",
+          color: themeColors.grey4,
+        }}
+      >
+        ☀️ Daily Quiz
+      </Text>
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+          height: "22%",
+        }}
+      >
+        <DailyQuestion
+          style={{ height: "100%" }}
+          containerStyle={{ height: "100%", justifyContent: "center" }}
+          isModalQuestionVisible={isModalQuestionVisible}
+          setIsModalQuestionVisible={setIsModalQuestionVisible}
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          width: "100%",
+        }}
+      >
+        <Text
+          h2
+          h2Style={{
+            fontSize: 25,
+            fontFamily: "UrbanistBold",
+            color: themeColors.grey4,
+          }}
+        >
+          ✍🏽 Class Quizzes
+        </Text>
+        <TouchableOpacity
+          onPress={() => console.log("pressed")}
+          style={{
+            padding: 10,
+            borderRadius: 100,
+          }}
+        >
+          <Ionicons name="ios-filter" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
+      <ClassQuizes />
+      {/* <Text>{JSON.stringify(user?.modules)}</Text> */}
     </ScrollView>
   );
 };

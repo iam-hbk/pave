@@ -8,11 +8,17 @@ import { useSelector } from "react-redux";
 import { User } from "@/types";
 import Toast from "react-native-toast-message";
 import useSocket from "./useSocket";
+
 export const useStudentRanking = () => {
   const user = useSelector(selectUser) as User;
   const { data, error, refetch } = useQuery(["userRanking"], () =>
     getUserRanking(user._id)
   );
+
+  useSocket("wallet change", async (...args: any[]) => {
+    console.log("wallet change", args);
+    await refetch();
+  });
 
   if (error) {
     Toast.show({
@@ -24,12 +30,6 @@ export const useStudentRanking = () => {
       topOffset: 50,
     });
   }
-
-  // Use the useSocket hook to listen for the 'wallet change' event
-  useSocket("wallet change", async (...args: any[]) => {
-    console.log("wallet change", args);
-    await refetch();
-  });
 
   return { data, error };
 };

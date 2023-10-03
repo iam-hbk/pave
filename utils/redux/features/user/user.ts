@@ -23,6 +23,7 @@ export async function loginUser({
       profilePicture: responseData.user.profilePicture,
       wallet: responseData.user.wallet,
       token: responseData.user.token,
+      modules: responseData.user.modules,
     };
 
     // Save the user data to local storage
@@ -107,6 +108,7 @@ export async function registerUser({
       profilePicture: responseData.userResponse.profilePicture,
       wallet: responseData.userResponse.wallet,
       token: responseData.userResponse.token,
+      modules: responseData.userResponse.modules,
     };
 
     console.log("\n\n[REGISTER][TOKEN]:", JSON.stringify(user, null, 2));
@@ -137,11 +139,13 @@ export async function getUser(id: string, token: string): Promise<User> {
       name: responseData.user.name,
       profilePicture: responseData.user.profilePicture,
       wallet: responseData.user.wallet,
+      modules: responseData.user.modules,
       token: responseData.user.token,
     };
 
     return user;
   } catch (error) {
+    console.log("\n\n[GET USER][ERROR]:", JSON.stringify(error, null, 2));
     throw Error((error as Error).message);
   }
 }
