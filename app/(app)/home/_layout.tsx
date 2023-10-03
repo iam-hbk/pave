@@ -28,6 +28,13 @@ const Auth = () => {
           header: (props) => <CoinHeader {...props} />,
         }}
       />
+      <Drawer.Screen
+        name="quiz"
+        options={{
+          headerShown: false,
+          title: "Quiz",
+        }}
+      />
     </Drawer>
   );
 };

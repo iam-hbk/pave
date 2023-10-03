@@ -20,7 +20,7 @@ interface RegisterPropsExt extends RegisterProps {
 }
 
 const LoginSchema = Yup.object().shape({
-  name: Yup.string().required("name is required"),
+  name: Yup.string().required("Name is required"),
   email: Yup.string()
     .email("Invalid email")
     .required("Email is required")
@@ -35,7 +35,6 @@ const LoginSchema = Yup.object().shape({
 });
 
 const Register = () => {
-  const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
   const { theme } = useTheme();
@@ -46,6 +45,7 @@ const Register = () => {
       email: values.email.toLowerCase(),
       name: values.name.toLowerCase(),
     };
+    console.log("DATA:", JSON.stringify(v, null, 2));
     try {
       const result = await registerUser(v);
       dispatch(setUser(result));

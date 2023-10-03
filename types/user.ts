@@ -6,6 +6,7 @@ export type User = {
   profilePicture?: string; // url
   wallet: number;
   token: string;
+  modules: string[];
 };
 export type RegisterProps = {
   email: string;
@@ -17,4 +18,9 @@ export type RegisterProps = {
 export type LoginProps = {
   email: string;
   password: string;
+};
+
+export type LocalStorageUser = {
+  _id: string;
+  token: string;
 };

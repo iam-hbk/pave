@@ -1,19 +1,16 @@
-import { StyleSheet, View } from "react-native";
-import React, { useRef } from "react";
-import { Link, useNavigation, useRouter } from "expo-router";
-import { Button, Card, ListItem, Text } from "@rneui/themed";
+import { RefreshControl, StyleSheet, View } from "react-native";
+import React from "react";
+import { ListItem, Text } from "@rneui/themed";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/utils/redux/features/user/userSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { ScrollView } from "react-native";
 import themeColors from "@/assets/colors";
-import { QuestionOfTheDayImage } from "@/components/icons";
-import { LinearGradient } from "expo-linear-gradient";
-import { selectQuestions } from "@/utils/redux/features/questions/questionSlice";
+import { selectQuestion } from "@/utils/redux/features/questions/questionSlice";
 import { LinearProgress } from "@rneui/themed";
-import DailyQuestionModal from "@/components/dailyQuestionModal";
-import HomeHeader from "@/components/homeHeader";
+import { useRefreshUser } from "@/hooks/useRefreshUser";
+import DailyQuestion from "@/components/dailyQuestion";
 
 interface Task {
   id: number;
@@ -52,8 +49,7 @@ const TASKS: Task[] = [
 const Home = () => {
   const user = useSelector(selectUser);
   const [tasks, setTasks] = React.useState<Task[]>(TASKS);
-  const questions = useSelector(selectQuestions);
-  const router = useRouter();
+  // const question = useSelector(selectQuestion);
   const [isModalQuestionVisible, setIsModalQuestionVisible] =
     React.useState<boolean>(false);
 
@@ -70,23 +66,13 @@ const Home = () => {
   //or status bar component, refer to the docs for more info.
   //https://reactnavigation.org/docs/handling-safe-area/
   const insets = useSafeAreaInsets();
-
-  // React.useEffect(() => {
-  //   let subs = true;
-  //   if (progress < 1 && progress !== 0) {
-  //     setTimeout(() => {
-  //       if (subs) {
-  //         setProgress(progress + 0.1);
-  //       }
-  //     }, 100);
-  //   }
-  //   return () => {
-  //     subs = false;
-  //   };
-  // }, [progress]);
+  const { refreshing, handleRefresh } = useRefreshUser();
 
   return (
     <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+      }
       contentContainerStyle={{
         paddingHorizontal: 20,
         gap: 20,
@@ -101,50 +87,12 @@ const Home = () => {
         paddingRight: insets.right,
       }}
     >
-      <DailyQuestionModal
-        isVisible={isModalQuestionVisible}
-        onClose={() => setIsModalQuestionVisible(false)}
-        dailyQuestionId={"2"}
+      <DailyQuestion
+        style={{ height: "22%" }}
+        containerStyle={styles.container}
+        isModalQuestionVisible={isModalQuestionVisible}
+        setIsModalQuestionVisible={setIsModalQuestionVisible}
       />
-      <TouchableOpacity
-        style={styles.container}
-        onPress={() => {
-          /**
-           *
-           * The questions (if they are many) will be stored in the redux store,
-           * The one that will be displayed will be the one with the ID we send in the params
-           */
-          let id = "2";
-          setIsModalQuestionVisible(true);
-        }}
-      >
-        <LinearGradient
-          // Background Linear Gradient
-          colors={["rgba(91, 136, 217, 0.50)", "rgba(204, 218, 243, 0.50)"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.background}
-        />
-        <View
-          style={{
-            padding: 20,
-            gap: 20,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 24,
-              color: themeColors.quaternaryShaded[900],
-            }}
-          >
-            Question of the day
-          </Text>
-          <Text>Where are the computer labs?</Text>
-        </View>
-        <View style={styles.questionOfTheDay}>
-          <QuestionOfTheDayImage />
-        </View>
-      </TouchableOpacity>
 
       <View
         style={{

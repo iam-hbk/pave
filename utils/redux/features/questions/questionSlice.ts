@@ -1,46 +1,35 @@
-import { QuestionType } from "@/types/question";
+import { DailyQuestion } from "@/types/question";
 import { User } from "@/types/user";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Type of the userSlice State
 type QuestionTypeSliceState = {
-  questions: QuestionType[] | null;
+  question: DailyQuestion | null;
 };
 
 const initialState: QuestionTypeSliceState = {
   //initial state is null, this is just for testing
-  questions: [
-    {
-      id: "2",
-      question: "Where are the computer labs?",
-      options: ["Concowan", "Study Center", "Library", "B Red 21"],
-      rightAnswer: "A",
-    },
-  ],
+  question: null,
 };
 
 export const questionSlice = createSlice({
-  name: "questions",
+  name: "question",
   initialState,
   reducers: {
-    setQuestions: (state, action: PayloadAction<QuestionType[]>) => {
-      state.questions = action.payload;
+    setDailyQuestion: (state, action: PayloadAction<DailyQuestion>) => {
+      state.question = action.payload;
+      console.log("Daily Question set !");
     },
   },
 });
 
 // Update the actions created i.e setUser, unSetUser, and updateUser
 // Action creators are generated for each case reducer function
-export const { setQuestions } = questionSlice.actions;
+export const { setDailyQuestion } = questionSlice.actions;
 
 //Selectors
-export const selectQuestions = (state: {
-  questions: QuestionTypeSliceState;
-}): QuestionType[] | null => state.questions.questions;
-
-export const selectQuestionById =
-  (id: string) =>
-  (state: { questions: QuestionTypeSliceState }): QuestionType | undefined =>
-    state.questions.questions?.find((question) => question.id == id);
+export const selectQuestion = (state: {
+  question: QuestionTypeSliceState;
+}): DailyQuestion | null => state.question?.question;
 
 export default questionSlice.reducer;

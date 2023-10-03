@@ -10,10 +10,15 @@ import { useEffect } from "react";
 import theme from "@/assets/theme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
 import { getUserTokenFromLocalStorage, toastConfig } from "@/utils/helpers";
 import { setUser } from "@/utils/redux/features/user/userSlice";
+import { getUser } from "@/utils/redux/features/user/user";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -68,13 +73,29 @@ function RootLayoutNav() {
 
 function App() {
   const dispatch = useDispatch();
-  const [screenLoading, setScreenLoading] = React.useState<boolean>(true);
+
   async function onStartUp() {
-    const user = await getUserTokenFromLocalStorage();
-    setScreenLoading(false);
-    if (user) {
-      dispatch(setUser(user));
-      router.replace("/home");
+    const tokenObject = await getUserTokenFromLocalStorage();
+    if (tokenObject) {
+      try {
+        const user = await getUser(tokenObject._id, tokenObject.token);
+        dispatch(setUser(user));
+
+        router.replace("/home");
+      } catch (error) {
+        console.log("Error getting user details", JSON.stringify(error, null, 2));
+        const message = JSON.parse((error as Error).message).message;
+        Toast.show({
+          type: "error",
+          position: "top",
+          text1: message.split(",")[0],
+          text2: message.split(",")[1],
+          visibilityTime: 4000,
+          autoHide: true,
+          topOffset: 50,
+        });
+        router.replace("/welcome");
+      }
     } else {
       router.replace("/welcome");
     }
@@ -83,7 +104,6 @@ function App() {
   useEffect(() => {
     onStartUp();
   }, []);
-
 
   return (
     <Stack

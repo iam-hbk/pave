@@ -17,7 +17,7 @@ import themeColors from "@/assets/colors";
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
 import { Entypo } from "@expo/vector-icons";
-import CoinIconAndAmount from "./CoinIconAndAmount";
+import CoinIconAndAmount from "./coinIconAndAmount";
 
 const CoinHeader = ({
   navigation,
