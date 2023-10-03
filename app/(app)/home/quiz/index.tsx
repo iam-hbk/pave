@@ -12,25 +12,38 @@ import { Ionicons } from "@expo/vector-icons";
 import RankingCard from "@/components/rankCard";
 import DailyQuestion from "@/components/dailyQuestion";
 import ClassQuizes from "@/components/classQuizzes";
+import { UseQueryResult, useQueries } from "@tanstack/react-query";
+import { getModuleById } from "@/utils/redux/features/modules/modules";
+import { ModuleType } from "@/types/module";
 
 type Props = {};
 
 const Quiz = (props: Props) => {
   const insets = useSafeAreaInsets();
   const user = useSelector(selectUser);
+  const queryResult: UseQueryResult[] = useQueries({
+    queries: (user?.modules || []).map((module, index) => {
+      console.log("Module", index, module);
+      return {
+        queryKey: [`module${module}}`, module, user?.token],
+        queryFn: () => getModuleById(module, user?.token as string),
+      };
+    }),
+  });
   const [isModalQuestionVisible, setIsModalQuestionVisible] =
     React.useState<boolean>(false);
 
   return (
     <ScrollView
       style={{
-        flex: 1,
+        // flex: 1,
         paddingTop: insets.top,
         paddingLeft: insets.left,
         paddingRight: insets.right,
       }}
+      scrollEventThrottle={16}
       contentContainerStyle={{
-        flex: 1,
+        backgroundColor: themeColors.quaternaryShaded[100],
         alignItems: "center",
         justifyContent: "flex-start",
         paddingVertical: 20,
@@ -240,8 +253,11 @@ const Quiz = (props: Props) => {
           <Ionicons name="ios-filter" size={24} color="black" />
         </TouchableOpacity>
       </View>
-      <ClassQuizes />
-      {/* <Text>{JSON.stringify(user?.modules)}</Text> */}
+      {queryResult.map((result, index) => {
+        if (result.isLoading) return <Text key={index}>Loading...</Text>;
+        if (result.isError) return <Text key={index}>Error</Text>;
+        return <ClassQuizes key={index} module={result.data as ModuleType} />;
+      })}
     </ScrollView>
   );
 };

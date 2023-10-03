@@ -4,6 +4,7 @@ import { Icon, ListItem, Text } from "@rneui/themed";
 import { BlurView } from "expo-blur";
 import themeColors from "@/assets/colors";
 import { QuizData } from "@/types";
+import { Link, router } from "expo-router";
 
 type Props = {
   quizzes: QuizData[];
@@ -77,7 +78,13 @@ const ClassQuizModal = ({ quizzes, modalVisible, setModalVisible }: Props) => {
                 backgroundColor: themeColors.quaternaryShaded[100],
               }}
               key={quiz._id}
-              onPress={() => console.log(quiz._id)}
+              onPress={() => {
+                setModalVisible(false);
+                router.push({
+                  pathname: "/(app)/home/quiz/answerQuiz",
+                  params: { quiz: JSON.stringify(quiz) },
+                });
+              }}
             >
               <ListItem.Content>
                 <ListItem.Title

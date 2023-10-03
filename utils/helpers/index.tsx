@@ -42,6 +42,37 @@ export function formatDateToHHMM(date: Date): string {
   return format(date, "HH:mm");
 }
 
+export function formatDate(dateString: string): string {
+  const months: string[] = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  const date = new Date(dateString);
+  let day: number = date.getDate();
+  const month: string = months[date.getMonth()];
+  const year: number = date.getFullYear();
+  let hour: number = date.getHours();
+  let minute: number = date.getMinutes();
+
+  // Add suffix to the day (st, nd, rd, th)
+  const daySuffix: string = (day % 10 === 1 && day !== 11)
+    ? 'st'
+    : (day % 10 === 2 && day !== 12)
+    ? 'nd'
+    : (day % 10 === 3 && day !== 13)
+    ? 'rd'
+    : 'th';
+
+  // Format hours and minutes to be always two digits
+  const hourStr: string = hour < 10 ? '0' + hour : hour.toString();
+  const minuteStr: string = minute < 10 ? '0' + minute : minute.toString();
+
+  return `${day}${daySuffix} ${month} ${year} at ${hourStr}:${minuteStr}`;
+}
+
+
+
 export async function setUserTokenToLocalStorage(token: LocalStorageUser): Promise<void> {
   try {
     await AsyncStorage.setItem("token", JSON.stringify(token));

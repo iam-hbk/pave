@@ -21,4 +21,6 @@ export interface QuizData {
   isActive: boolean;
   expiresAt: string;
   date: string;
+  moduleCode: string;
+  moduleName: string;
 }

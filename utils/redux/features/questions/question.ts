@@ -1,4 +1,4 @@
-import { DailyQuestion } from "@/types/question";
+import { DailyQuestion, QuizData, QuizQuestion } from "@/types/question";
 import api from "../../api";
 
 interface Error {
@@ -14,7 +14,6 @@ export async function getDailyQuestion(
     const data: any = await api
       .auth(`Bearer ${token}`)
       .get("/daily-question/daily/today");
-    console.log("[DAILY QUESTIONS]", data);
 
     const dailyQuestion: DailyQuestion = {
       _id: data._id,
@@ -31,5 +30,22 @@ export async function getDailyQuestion(
     }
     console.log("[DAILY QUESTIONS ERROR]", JSON.stringify(error, null, 2));
     throw error;
+  }
+}
+
+export async function getQuizzesByModuleId(
+  id: string,
+  token: string
+): Promise<QuizData[]> {
+  // console.log("[MODULE ID]", id, id === "651835453acb0d7dd3434fe0");
+  try {
+    const data: any = await api
+      .auth(`Bearer ${token}`)
+      .get("/quiz/module/id/" + id);
+    console.log("[QUIZES-DATA]", data);
+
+    return data as QuizData[];
+  } catch (error) {
+    throw Error((error as Error).message);
   }
 }
