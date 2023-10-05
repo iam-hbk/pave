@@ -9,6 +9,7 @@ import { router } from "expo-router";
 const QR = () => {
   const [hasPermission, setHasPermission] = useState<boolean>();
   const [scanned, setScanned] = useState(false);
+  const [data, setData] = useState<string>();
 
   const getBarCodeScannerPermissions = async () => {
     const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -35,13 +36,15 @@ const QR = () => {
     type: string;
     data: any;
   }) => {
-    data = "ATDR24534";
     setScanned(true); //to pause the scanner after scanning once
     //TODO: Add logic to check if the QR code is valid
+    setData(data);
     //The scanned data will be the ID of the class going on. always starts with a "ATDR"
     //TODO: Use this package https://next-qrcode.js.org/demo on the website to generate QR codes
-
-    router.push(`/(app)/home/qr/${data}`);
+    router.push({
+      pathname: "/(app)/home/qr/displayClass",
+      params: { classQR: data },
+    });
   };
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;

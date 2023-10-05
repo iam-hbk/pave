@@ -1,6 +1,6 @@
 import { View, TouchableOpacity } from "react-native";
 import React from "react";
-import { router, useGlobalSearchParams } from "expo-router";
+import { Link, router, useGlobalSearchParams } from "expo-router";
 import { StartQuizBlob } from "@/components/icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -58,16 +58,20 @@ const AnswerQuiz = (props: Props) => {
         >
           {quiz.title}
         </Text>
-        <Text h3 h3Style={
-          {
+        <Text
+          h3
+          h3Style={{
             color: themeColors.grey2,
             paddingHorizontal: 30,
             textTransform: "capitalize",
             textAlign: "center",
             marginTop: 10,
-          }
-        }>{formatDate(quiz.expiresAt)}</Text>
+          }}
+        >
+          {formatDate(quiz.expiresAt)}
+        </Text>
       </View>
+      <Link href={"/home/quiz/submitQuiz"}>Submit Quiz</Link>
       <Button
         style={{
           alignSelf: "flex-end",

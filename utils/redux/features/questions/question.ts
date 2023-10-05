@@ -37,12 +37,10 @@ export async function getQuizzesByModuleId(
   id: string,
   token: string
 ): Promise<QuizData[]> {
-  // console.log("[MODULE ID]", id, id === "651835453acb0d7dd3434fe0");
   try {
     const data: any = await api
       .auth(`Bearer ${token}`)
       .get("/quiz/module/id/" + id);
-    console.log("[QUIZES-DATA]", data);
 
     return data as QuizData[];
   } catch (error) {

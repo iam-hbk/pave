@@ -12,7 +12,6 @@ import {
 } from "@rneui/themed";
 import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
-import { getClassInfo } from "@/utils/redux/features/attendance/attendance";
 import themeColors from "@/assets/colors";
 import { formatDateToHHMM, getDistanceDifference } from "@/utils/helpers";
 import Countdown from "@/components/countDown";
@@ -25,31 +24,84 @@ import {
   WithInLocationRange,
 } from "@/components/icons";
 import useLocation from "@/hooks/useLocation";
+import { getModuleById } from "@/utils/redux/features/modules/modules";
+import { useSelector } from "react-redux";
+import {
+  selectUserId,
+  selectUserToken,
+} from "@/utils/redux/features/user/userSlice";
+import { AttendanceClassProps } from "@/types";
+import Toast from "react-native-toast-message";
+import {
+  AttendancePost,
+  signAttendance,
+} from "@/utils/redux/features/attendance/attendance";
+
 const ScannedData = () => {
-  const { classID } = useLocalSearchParams<{ classID: string }>();
-  const { isLoading, isError, data, error } = useQuery([classID], () =>
-    getClassInfo(classID)
+  const params = useLocalSearchParams();
+  const classQR: AttendanceClassProps = JSON.parse(params.classQR as string);
+  const token = useSelector(selectUserToken);
+  const studentID = useSelector(selectUserId);
+  const {
+    isLoading,
+    isError,
+    data: module,
+    error,
+  } = useQuery(["attendance"], () =>
+    getModuleById(classQR.module, token as string)
   );
 
   const { location, locationLoading, errorMsg } = useLocation();
   const [distance, setDistance] = React.useState<number>();
   const [canSignAttendance, setCanSignAttendance] = React.useState<boolean>();
+  const [isActive, setIsActive] = React.useState<boolean>(true);
+  const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false);
 
-  const onAttendanceConfirmation = () => {
-    alert("Attendance Confirmed");
-    router.replace("../");
-  };
+  async function onAttendanceConfirmation(): Promise<void> {
+    let attendanceData: AttendancePost = {
+      // rewardAmount: classQR.rewardAmount,
+      rewardAmount: 50,
+      sessionId: classQR._id,
+      studentId: studentID as string,
+    };
+    try {
+      setIsSubmitting(true);
+      const res = await signAttendance(attendanceData, token as string);
+      Toast.show({
+        type: "success",
+        position: "top",
+        text2: res,
+        visibilityTime: 4000,
+        autoHide: true,
+        topOffset: 50,
+      });
+      router.replace("../../");
+    } catch (error: any) {
+      console.log(JSON.stringify(error, null, 2));
+      Toast.show({
+        type: "error",
+        position: "top",
+        text1: "Error",
+        text2: JSON.parse(error.message).message,
+        visibilityTime: 4000,
+        autoHide: true,
+        topOffset: 50,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   React.useEffect(() => {
-    if (location && data) {
+    if (location && classQR) {
       let d = getDistanceDifference(
         { lat: location.coords.latitude, long: location.coords.longitude },
-        { lat: data.qrCodeOrigin.lat, long: data.qrCodeOrigin.long }
+        { lat: classQR.qrCodeOrigin.lat, long: classQR.qrCodeOrigin.long }
       );
       setDistance(d);
-      setCanSignAttendance(d < 100);
+      setCanSignAttendance(d < 2000);
     }
-  }, [location, data]);
+  }, [location, classQR]);
 
   if (isLoading) {
     return (
@@ -182,7 +234,7 @@ const ScannedData = () => {
               color: themeColors.quaternaryShaded[700],
             }}
           >
-            {data.moduleName}
+            {module.moduleName}
           </Text>
         </View>
         <View
@@ -208,7 +260,7 @@ const ScannedData = () => {
               color: themeColors.quaternaryShaded[700],
             }}
           >
-            {data.moduleCode}
+            {module.moduleCode}
           </Text>
         </View>
         <View
@@ -234,7 +286,7 @@ const ScannedData = () => {
               color: themeColors.quaternaryShaded[700],
             }}
           >
-            {data.lecturerName}
+            {module.lecturer}
           </Text>
         </View>
         <View
@@ -256,7 +308,7 @@ const ScannedData = () => {
             buttonStyle={{
               backgroundColor: themeColors.tertiaryShaded[700],
             }}
-            title={formatDateToHHMM(data.classStartTime)}
+            title={formatDateToHHMM(new Date(classQR.classStartTime))}
           />
         </View>
         <View
@@ -278,7 +330,7 @@ const ScannedData = () => {
             buttonStyle={{
               backgroundColor: themeColors.error,
             }}
-            title={formatDateToHHMM(data.classEndTime)}
+            title={formatDateToHHMM(new Date(classQR.classEndTime))}
           />
         </View>
       </View>
@@ -299,7 +351,12 @@ const ScannedData = () => {
         >
           Time until the QR code expires
         </Text>
-        <Countdown endTime={data.classEndTime} />
+        <Countdown
+          onCountdownEnd={() => {
+            setIsActive(false);
+          }}
+          endTime={new Date(classQR.classEndTime)}
+        />
       </View>
       <View
         style={{
@@ -367,9 +424,10 @@ const ScannedData = () => {
         </Text>
       </View>
       <Button
-        disabled={!canSignAttendance}
+        disabled={!canSignAttendance || !isActive}
         title={"Confirm Attendance"}
         onPress={() => onAttendanceConfirmation()}
+        loading={isSubmitting}
       />
     </ScrollView>
   );

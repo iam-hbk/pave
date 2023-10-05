@@ -11,7 +11,7 @@ const useSocket = (event: string, callback: EventCallback) => {
 
     // Handle connection errors
     socket.on("connect_error", (error) => {
-      console.error("Connection error:", error);
+      console.error("Connection error:", JSON.stringify(error, null, 2));
     });
 
     // Remove event listener on unmount

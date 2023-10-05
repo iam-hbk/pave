@@ -1,49 +1,41 @@
-import { View, TouchableOpacity } from "react-native";
+import { ScrollView, View } from "react-native";
 import React from "react";
-import { ScrollView } from "react-native-gesture-handler";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useSelector } from "react-redux";
-import { selectUser } from "@/utils/redux/features/user/userSlice";
 import { Text } from "@rneui/themed";
-import { LinearGradient } from "expo-linear-gradient";
-import { Coin } from "@/components/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser, setUser } from "@/utils/redux/features/user/userSlice";
 import themeColors from "@/assets/colors";
+import { LinearGradient } from "expo-linear-gradient";
+import DailyQuestion from "@/components/dailyQuestion";
+import { Coin } from "@/components/icons";
 import { Ionicons } from "@expo/vector-icons";
 import RankingCard from "@/components/rankCard";
-import DailyQuestion from "@/components/dailyQuestion";
-import ClassQuizes from "@/components/classQuizzes";
-import { UseQueryResult, useQueries } from "@tanstack/react-query";
-import { getModuleById } from "@/utils/redux/features/modules/modules";
-import { ModuleType } from "@/types/module";
+import { User } from "@/types";
+import { TouchableOpacity } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import LottieView from "lottie-react-native";
+import QuizList from "@/components/quizList";
 
 type Props = {};
 
-const Quiz = (props: Props) => {
+const Index = (props: Props) => {
   const insets = useSafeAreaInsets();
-  const user = useSelector(selectUser);
-  const queryResult: UseQueryResult[] = useQueries({
-    queries: (user?.modules || []).map((module, index) => {
-      console.log("Module", index, module);
-      return {
-        queryKey: [`module${module}}`, module, user?.token],
-        queryFn: () => getModuleById(module, user?.token as string),
-      };
-    }),
-  });
+  const user = useSelector(selectUser) as User;
+
   const [isModalQuestionVisible, setIsModalQuestionVisible] =
     React.useState<boolean>(false);
 
   return (
     <ScrollView
       style={{
-        // flex: 1,
-        paddingTop: insets.top,
+        flex: 1,
+        // paddingTop: insets.top,
         paddingLeft: insets.left,
         paddingRight: insets.right,
+        backgroundColor: themeColors.white,
       }}
-      scrollEventThrottle={16}
       contentContainerStyle={{
-        backgroundColor: themeColors.quaternaryShaded[100],
+        // flex: 1,
         alignItems: "center",
         justifyContent: "flex-start",
         paddingVertical: 20,
@@ -75,13 +67,12 @@ const Quiz = (props: Props) => {
           Great to see you again !
         </Text>
       </View>
-
       <View
         style={{
           alignItems: "center",
           justifyContent: "center",
           width: "100%",
-          height: "22%",
+          height: 150,
           //shadow
           shadowColor: themeColors.tertiaryDark,
           shadowOffset: { width: 0, height: 2 },
@@ -198,7 +189,6 @@ const Quiz = (props: Props) => {
           </View>
         </LinearGradient>
       </View>
-
       <Text
         h2
         h2Style={{
@@ -215,10 +205,11 @@ const Quiz = (props: Props) => {
           alignItems: "center",
           justifyContent: "center",
           width: "100%",
-          height: "22%",
+          height: 150,
         }}
       >
         <DailyQuestion
+          parentHeight={150}
           style={{ height: "100%" }}
           containerStyle={{ height: "100%", justifyContent: "center" }}
           isModalQuestionVisible={isModalQuestionVisible}
@@ -253,13 +244,10 @@ const Quiz = (props: Props) => {
           <Ionicons name="ios-filter" size={24} color="black" />
         </TouchableOpacity>
       </View>
-      {queryResult.map((result, index) => {
-        if (result.isLoading) return <Text key={index}>Loading...</Text>;
-        if (result.isError) return <Text key={index}>Error</Text>;
-        return <ClassQuizes key={index} module={result.data as ModuleType} />;
-      })}
+
+      <QuizList />
     </ScrollView>
   );
 };
 
-export default Quiz;
+export default Index;

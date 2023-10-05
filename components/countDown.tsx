@@ -5,9 +5,10 @@ import { View } from "react-native";
 
 type CountdownProps = {
   endTime: Date;
+  onCountdownEnd: () => void;
 };
 
-const Countdown: React.FC<CountdownProps> = ({ endTime }) => {
+const Countdown: React.FC<CountdownProps> = ({ endTime, onCountdownEnd }) => {
   const [countdown, setCountdown] = useState("");
   const [progress, setProgress] = useState(0);
   const [startTime] = useState(new Date());
@@ -21,6 +22,8 @@ const Countdown: React.FC<CountdownProps> = ({ endTime }) => {
 
       if (difference <= 0) {
         setCountdown("00:00:00");
+        onCountdownEnd();
+        clearInterval(intervalId);
         return;
       }
 

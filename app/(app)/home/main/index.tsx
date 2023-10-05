@@ -47,6 +47,7 @@ const TASKS: Task[] = [
 ];
 
 const Home = () => {
+  
   const user = useSelector(selectUser);
   const [tasks, setTasks] = React.useState<Task[]>(TASKS);
   // const question = useSelector(selectQuestion);
@@ -88,6 +89,7 @@ const Home = () => {
       }}
     >
       <DailyQuestion
+        // parentHeight={150}
         style={{ height: "22%" }}
         containerStyle={styles.container}
         isModalQuestionVisible={isModalQuestionVisible}

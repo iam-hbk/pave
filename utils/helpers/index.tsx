@@ -21,6 +21,7 @@ export function getDistanceDifference(coord1: Coordinate, coord2: Coordinate) {
   const lon1 = degToRad(coord1.long);
   const lat2 = degToRad(coord2.lat);
   const lon2 = degToRad(coord2.long);
+  console.log("COOOOOOOOORDS",coord1,coord2)
 
   // Calculate differences between coordinates
   const dLat = lat2 - lat1;
@@ -34,6 +35,7 @@ export function getDistanceDifference(coord1: Coordinate, coord2: Coordinate) {
 
   // Calculate distance in meters
   const distance = R * c;
+  console.log("Distance:", distance)
 
   return distance;
 }

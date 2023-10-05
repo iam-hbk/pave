@@ -58,12 +58,12 @@ const ClassQuizes = ({ module }: Props) => {
       </View>
     );
   }
-  
+
   //   console.log("\n\n\nQUIZZZZZZ", JSON.stringify(quizzes, null, 2));
   //   return null;
   return (
     <View style={{ width: "100%" }}>
-      {quizzes && (
+      {quizzes && quizzes.length > 0 && (
         <ClassQuizModal
           quizzes={quizzes}
           modalVisible={expanded}

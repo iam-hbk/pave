@@ -39,4 +39,7 @@ export const selectUser = (state: { user: UserSliceState }) => state.user.user;
 export const selectUserToken = (state: { user: UserSliceState }) => {
   return state.user.user?.token;
 };
+export const selectUserId = (state: { user: UserSliceState }) => {
+  return state.user.user?._id;
+};
 export default userSlice.reducer;
