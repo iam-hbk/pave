@@ -7,6 +7,7 @@ export interface AttendancePost {
 }
 
 export async function signAttendance(record: AttendancePost, token: string) {
+  console.log("signing",record);
   try {
     const data: any = await api
       .auth(`Bearer ${token}`)

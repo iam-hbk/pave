@@ -4,14 +4,15 @@ import { Text, Button } from "@rneui/themed";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useFocusEffect } from "expo-router";
 import { router } from "expo-router";
+import Toast from "react-native-toast-message";
+import { decryptTheQrCode } from "@/utils/helpers";
+import { da } from "date-fns/locale";
 // const barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
 
 const QR = () => {
-  const [hasPermission, setHasPermission] = useState<boolean>();
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState(false);
-  const [data, setData] = useState<string>();
-
-  const getBarCodeScannerPermissions = async () => {
+  const getBarCodeScannerPermissions = async (): Promise<void> => {
     const { status } = await BarCodeScanner.requestPermissionsAsync();
     setHasPermission(status === "granted");
   };
@@ -29,23 +30,31 @@ const QR = () => {
       };
     }, [])
   );
-  const handleBarCodeScanned = ({
-    type,
-    data,
-  }: {
-    type: string;
-    data: any;
-  }) => {
-    setScanned(true); //to pause the scanner after scanning once
-    //TODO: Add logic to check if the QR code is valid
-    setData(data);
-    //The scanned data will be the ID of the class going on. always starts with a "ATDR"
-    //TODO: Use this package https://next-qrcode.js.org/demo on the website to generate QR codes
-    router.push({
-      pathname: "/(app)/home/qr/displayClass",
-      params: { classQR: data },
-    });
-  };
+  const handleBarCodeScanned = React.useCallback(
+    ({ type, data }: { type: string; data: any }) => {
+      if (typeof data === "string") {
+        setScanned(true);
+        console.log("data", data);
+        router.push({
+          pathname: "/(app)/home/qr/displayClass",
+          params: { classQR: data },
+          // params: { classQR: decryptTheQrCode(data) },
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Invalid QR Code",
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 30,
+          bottomOffset: 40,
+        });
+      }
+    },
+    []
+  );
+
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
   }

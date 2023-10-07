@@ -1,6 +1,10 @@
 import { format, addHours } from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Toast, { BaseToast, ErrorToast, ToastProps } from "react-native-toast-message";
+import Toast, {
+  BaseToast,
+  ErrorToast,
+  ToastProps,
+} from "react-native-toast-message";
 import themeColors from "@/assets/colors";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { LocalStorageUser, User } from "@/types";
@@ -21,8 +25,6 @@ export function getDistanceDifference(coord1: Coordinate, coord2: Coordinate) {
   const lon1 = degToRad(coord1.long);
   const lat2 = degToRad(coord2.lat);
   const lon2 = degToRad(coord2.long);
-  console.log("COOOOOOOOORDS",coord1,coord2)
-
   // Calculate differences between coordinates
   const dLat = lat2 - lat1;
   const dLon = lon2 - lon1;
@@ -35,7 +37,6 @@ export function getDistanceDifference(coord1: Coordinate, coord2: Coordinate) {
 
   // Calculate distance in meters
   const distance = R * c;
-  console.log("Distance:", distance)
 
   return distance;
 }
@@ -46,8 +47,18 @@ export function formatDateToHHMM(date: Date): string {
 
 export function formatDate(dateString: string): string {
   const months: string[] = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
   const date = new Date(dateString);
@@ -58,24 +69,25 @@ export function formatDate(dateString: string): string {
   let minute: number = date.getMinutes();
 
   // Add suffix to the day (st, nd, rd, th)
-  const daySuffix: string = (day % 10 === 1 && day !== 11)
-    ? 'st'
-    : (day % 10 === 2 && day !== 12)
-    ? 'nd'
-    : (day % 10 === 3 && day !== 13)
-    ? 'rd'
-    : 'th';
+  const daySuffix: string =
+    day % 10 === 1 && day !== 11
+      ? "st"
+      : day % 10 === 2 && day !== 12
+      ? "nd"
+      : day % 10 === 3 && day !== 13
+      ? "rd"
+      : "th";
 
   // Format hours and minutes to be always two digits
-  const hourStr: string = hour < 10 ? '0' + hour : hour.toString();
-  const minuteStr: string = minute < 10 ? '0' + minute : minute.toString();
+  const hourStr: string = hour < 10 ? "0" + hour : hour.toString();
+  const minuteStr: string = minute < 10 ? "0" + minute : minute.toString();
 
   return `${day}${daySuffix} ${month} ${year} at ${hourStr}:${minuteStr}`;
 }
 
-
-
-export async function setUserTokenToLocalStorage(token: LocalStorageUser): Promise<void> {
+export async function setUserTokenToLocalStorage(
+  token: LocalStorageUser
+): Promise<void> {
   try {
     await AsyncStorage.setItem("token", JSON.stringify(token));
   } catch (error) {
@@ -143,6 +155,27 @@ export async function removeRankingFromLocalStorage(): Promise<void> {
   } catch (error) {
     throw error;
   }
+}
+export function decryptTheQrCode(str: string): string {
+  return str
+    .split("")
+    .map((char) => {
+      let code = char.charCodeAt(0);
+
+      // Decrypt uppercase letters
+      if (code >= 65 && code <= 90) {
+        return String.fromCharCode(((code - 65 - 5 + 26) % 26) + 65);
+      }
+
+      // Decrypt lowercase letters
+      if (code >= 97 && code <= 122) {
+        return String.fromCharCode(((code - 97 - 5 + 26) % 26) + 97);
+      }
+
+      // Return other characters unchanged
+      return char;
+    })
+    .join("");
 }
 
 /**

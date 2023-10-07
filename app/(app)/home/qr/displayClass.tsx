@@ -1,23 +1,13 @@
 import { View } from "react-native";
 import React from "react";
-import { router } from "expo-router";
-import {
-  Button,
-  Text,
-  Input,
-  Icon,
-  useTheme,
-  Chip,
-  Skeleton,
-} from "@rneui/themed";
+import { router, useGlobalSearchParams } from "expo-router";
+import { Button, Text, Chip, Skeleton } from "@rneui/themed";
 import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import themeColors from "@/assets/colors";
 import { formatDateToHHMM, getDistanceDifference } from "@/utils/helpers";
 import Countdown from "@/components/countDown";
 import { ScrollView } from "react-native-gesture-handler";
-import * as Location from "expo-location";
-import { set } from "date-fns";
 import {
   ErrorBlob,
   OutOfLocationRange,
@@ -30,26 +20,18 @@ import {
   selectUserId,
   selectUserToken,
 } from "@/utils/redux/features/user/userSlice";
-import { AttendanceClassProps } from "@/types";
+import { SessionData } from "@/types";
 import Toast from "react-native-toast-message";
 import {
   AttendancePost,
   signAttendance,
 } from "@/utils/redux/features/attendance/attendance";
 
-const ScannedData = () => {
+type ScannedDataProps = {};
+const ScannedData: React.FC<ScannedDataProps> = (props) => {
   const params = useLocalSearchParams();
-  const classQR: AttendanceClassProps = JSON.parse(params.classQR as string);
   const token = useSelector(selectUserToken);
   const studentID = useSelector(selectUserId);
-  const {
-    isLoading,
-    isError,
-    data: module,
-    error,
-  } = useQuery(["attendance"], () =>
-    getModuleById(classQR.module, token as string)
-  );
 
   const { location, locationLoading, errorMsg } = useLocation();
   const [distance, setDistance] = React.useState<number>();
@@ -57,139 +39,56 @@ const ScannedData = () => {
   const [isActive, setIsActive] = React.useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = React.useState<boolean>(false);
 
-  async function onAttendanceConfirmation(): Promise<void> {
-    let attendanceData: AttendancePost = {
-      // rewardAmount: classQR.rewardAmount,
-      rewardAmount: 50,
-      sessionId: classQR._id,
-      studentId: studentID as string,
-    };
-    try {
-      setIsSubmitting(true);
-      const res = await signAttendance(attendanceData, token as string);
-      Toast.show({
-        type: "success",
-        position: "top",
-        text2: res,
-        visibilityTime: 4000,
-        autoHide: true,
-        topOffset: 50,
-      });
-      router.replace("../../");
-    } catch (error: any) {
-      console.log(JSON.stringify(error, null, 2));
-      Toast.show({
-        type: "error",
-        position: "top",
-        text1: "Error",
-        text2: JSON.parse(error.message).message,
-        visibilityTime: 4000,
-        autoHide: true,
-        topOffset: 50,
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
+  const sessionData: SessionData = JSON.parse(params.classQR as string);
+  const onAttendanceConfirmation =
+    React.useCallback(async (): Promise<void> => {
+      let attendanceData: AttendancePost = {
+        // rewardAmount: sessionData.rewardAmount,
+        rewardAmount: 50,
+        sessionId: sessionData._id,
+        studentId: studentID as string,
+      };
+      try {
+        setIsSubmitting(true);
+        const res = await signAttendance(attendanceData, token as string);
+        Toast.show({
+          type: "success",
+          position: "top",
+          text2: res,
+          visibilityTime: 4000,
+          autoHide: true,
+          topOffset: 50,
+        });
+        router.back();
+      } catch (error: any) {
+        console.log("ERROR SIGNING ATTENDANCE", error);
+        Toast.show({
+          type: "error",
+          position: "top",
+          text1: "Error",
+          text2: JSON.parse(error.message).message,
+          visibilityTime: 4000,
+          autoHide: true,
+          topOffset: 50,
+        });
+      } finally {
+        setIsSubmitting(false);
+      }
+    }, [sessionData, token, studentID]);
 
   React.useEffect(() => {
-    if (location && classQR) {
+    if (location && sessionData) {
       let d = getDistanceDifference(
         { lat: location.coords.latitude, long: location.coords.longitude },
-        { lat: classQR.qrCodeOrigin.lat, long: classQR.qrCodeOrigin.long }
+        {
+          lat: sessionData.qrCodeOrigin.lat,
+          long: sessionData.qrCodeOrigin.long,
+        }
       );
       setDistance(d);
       setCanSignAttendance(d < 2000);
     }
-  }, [location, classQR]);
-
-  if (isLoading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          gap: 20,
-          padding: 20,
-        }}
-      >
-        <Skeleton
-          skeletonStyle={{
-            backgroundColor: themeColors.quaternaryShaded[200],
-          }}
-          style={{
-            backgroundColor: themeColors.quaternaryShaded[100],
-            flex: 2,
-          }}
-        />
-        <Skeleton
-          skeletonStyle={{
-            backgroundColor: themeColors.quaternaryShaded[200],
-          }}
-          style={{
-            backgroundColor: themeColors.quaternaryShaded[100],
-            flex: 2,
-          }}
-        />
-        <Skeleton
-          skeletonStyle={{
-            backgroundColor: themeColors.quaternaryShaded[200],
-          }}
-          style={{
-            backgroundColor: themeColors.quaternaryShaded[100],
-            flex: 1,
-          }}
-        />
-        <Skeleton
-          skeletonStyle={{
-            backgroundColor: themeColors.quaternaryShaded[200],
-          }}
-          style={{
-            backgroundColor: themeColors.quaternaryShaded[100],
-            flex: 0.5,
-            borderRadius: 10,
-          }}
-        />
-      </View>
-    );
-  }
-
-  if (isError || (errorMsg && errorMsg.length > 0)) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          padding: 20,
-          gap: 20,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Text
-          h1
-          style={{
-            color: themeColors.grey3,
-            textAlign: "center",
-          }}
-          h1Style={{
-            fontSize: 30,
-          }}
-        >
-          Uhm! someone broke something !{" "}
-        </Text>
-        <ErrorBlob increaseBy={80} />
-        <Text
-          h3
-          style={{
-            color: themeColors.error,
-          }}
-        >
-          Error: {(error as Error).message}
-        </Text>
-        {errorMsg && <Text h3>Error: {errorMsg}</Text>}
-        <Button title={"Try Again"} onPress={() => router.replace("../")} />
-      </View>
-    );
-  }
+  }, [location, sessionData]);
 
   return (
     <ScrollView
@@ -234,7 +133,7 @@ const ScannedData = () => {
               color: themeColors.quaternaryShaded[700],
             }}
           >
-            {module.moduleName}
+            {sessionData.module.moduleName}
           </Text>
         </View>
         <View
@@ -260,7 +159,7 @@ const ScannedData = () => {
               color: themeColors.quaternaryShaded[700],
             }}
           >
-            {module.moduleCode}
+            {sessionData.module.moduleCode}
           </Text>
         </View>
         <View
@@ -286,7 +185,7 @@ const ScannedData = () => {
               color: themeColors.quaternaryShaded[700],
             }}
           >
-            {module.lecturer}
+            {sessionData.module.lecturer.name}
           </Text>
         </View>
         <View
@@ -308,7 +207,7 @@ const ScannedData = () => {
             buttonStyle={{
               backgroundColor: themeColors.tertiaryShaded[700],
             }}
-            title={formatDateToHHMM(new Date(classQR.classStartTime))}
+            title={formatDateToHHMM(new Date(sessionData.classStartTime))}
           />
         </View>
         <View
@@ -330,7 +229,7 @@ const ScannedData = () => {
             buttonStyle={{
               backgroundColor: themeColors.error,
             }}
-            title={formatDateToHHMM(new Date(classQR.classEndTime))}
+            title={formatDateToHHMM(new Date(sessionData.classEndTime))}
           />
         </View>
       </View>
@@ -355,7 +254,7 @@ const ScannedData = () => {
           onCountdownEnd={() => {
             setIsActive(false);
           }}
-          endTime={new Date(classQR.classEndTime)}
+          endTime={new Date(sessionData.classEndTime)}
         />
       </View>
       <View
@@ -433,4 +332,4 @@ const ScannedData = () => {
   );
 };
 
-export default ScannedData;
+export default React.memo<ScannedDataProps>(ScannedData);
