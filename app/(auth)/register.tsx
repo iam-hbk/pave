@@ -88,6 +88,7 @@ const Register = () => {
           name: "",
           confirmPassword: "",
           role: "Student",
+          consecutiveLogins: 0,
         }}
         validationSchema={LoginSchema}
         onSubmit={handleRegister}

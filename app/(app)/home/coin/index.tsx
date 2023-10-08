@@ -1,6 +1,8 @@
 import { View, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Text, Button, useTheme, Card } from "@rneui/themed";
+import axios from "axios";
+
 import {
   CheckedInIcon,
   CheckedInIconToday,
@@ -11,8 +13,44 @@ import themeColors from "@/assets/colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { Stack } from "@rneui/layout";
 import { Image } from "@rneui/themed";
+import { useSelector } from "react-redux";
+import {
+  selectUser,
+  selectUserId,
+  selectUserToken,
+} from "@/utils/redux/features/user/userSlice";
+import CheckIn from "@/utils/redux/features/Checkin/checkIn";
+import api from "@/utils/redux/api";
+
+// const responseData: any = await api.url("/users/login").post({
+// const responseData: any = await api.url("/users/login").post({
 
 const Coins = () => {
+  const [alreadyCheckedIn, setAlreadyCheckedIn] = useState(false);
+  const user = useSelector(selectUser);
+  let consecutiveLogins = user?.consecutiveLogins;
+
+  const token = useSelector(selectUserToken);
+  const userId = useSelector(selectUserId);
+  console.log(token);
+
+  console.log(user);
+  const handleCheckin = async () => {
+    try {
+      const response = await api
+        .url("/users/checkin")
+        .headers({
+          Accept: "*/*",
+          Authorization: `Bearer ${token}`,
+        })
+        .post({ id: userId });
+      setAlreadyCheckedIn(true);
+      console.log(response);
+    } catch (error) {
+      console.error("Error during the request:", error);
+    }
+  };
+
   const { theme } = useTheme();
   const days = ["day 1", "day 2", "day 3", "day 4", "day 5"];
   return (
@@ -78,7 +116,7 @@ const Coins = () => {
             }}
           >
             {days.map((day, index) => {
-              if (index !== 3) {
+              if (index !== consecutiveLogins) {
                 return (
                   <Stack key={index} justify="center" align="center">
                     <Stack
@@ -138,13 +176,17 @@ const Coins = () => {
             })}
           </Stack>
           <Stack>
-            <Button
-              buttonStyle={{
-                backgroundColor: themeColors.tertiaryShaded[600],
-              }}
-            >
-              Check in{" "}
-            </Button>
+            {!alreadyCheckedIn && (
+              <Button
+                onPress={handleCheckin}
+                buttonStyle={{
+                  backgroundColor: themeColors.tertiaryShaded[600],
+                }}
+              >
+                Check in{" "}
+              </Button>
+            )}
+            {alreadyCheckedIn && <Button>See you Tomorrow!</Button>}
           </Stack>
         </Stack>
       </LinearGradient>
