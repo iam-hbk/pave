@@ -19,9 +19,11 @@ type Props = {
   setIsModalQuestionVisible: (value: boolean) => void;
   style?: ViewStyle | ViewStyle[];
   containerStyle?: ViewStyle | ViewStyle[];
+  parentHeight?: number;
 };
 
 const DailyQuestionComponent = ({
+  parentHeight,
   isModalQuestionVisible,
   setIsModalQuestionVisible,
   style = {},
@@ -57,7 +59,7 @@ const DailyQuestionComponent = ({
           backgroundColor: themeColors.quaternaryShaded[500],
         }}
         style={{
-          height: 200,
+          height: parentHeight || 200,
           width: "100%",
           borderRadius: 15,
         }}

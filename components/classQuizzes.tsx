@@ -6,89 +6,70 @@ import { MaterialIcons } from "@expo/vector-icons";
 import themeColors from "@/assets/colors";
 import ClassQuizModal from "./classQuizzesModal";
 import { QuizData } from "@/types";
+import { ModuleType } from "@/types/module";
+import { useQuery } from "@tanstack/react-query";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { getQuizzesByModuleId } from "@/utils/redux/features/questions/question";
+import { useSelector } from "react-redux";
+import { selectUserToken } from "@/utils/redux/features/user/userSlice";
 
-type Props = {};
+type Props = {
+  module: ModuleType;
+};
 
-const quizzes: QuizData[] = [
-  {
-    _id: "651aa114c4626d73f4a19b62",
-    module: "IFS3A",
-    questions: [
-      {
-        questionText: "What is the capital of France?",
-        options: ["Rome", "Madrid", "Paris", "Berlin"],
-        correctAnswer: 2,
-        _id: "651aa114c4626d73f4a19b63",
-      },
-      {
-        questionText: "Which planet is known as the Red Planet?",
-        options: ["Earth", "Mars", "Jupiter", "Saturn"],
-        correctAnswer: 1,
-        _id: "651aa114c4626d73f4a19b64",
-      },
-      {
-        questionText: "What is the largest ocean on Earth?",
-        options: [
-          "Atlantic Ocean",
-          "Indian Ocean",
-          "Arctic Ocean",
-          "Pacific Ocean",
-        ],
-        correctAnswer: 3,
-        _id: "651aa114c4626d73f4a19b65",
-      },
-    ],
-    title: "database security",
-    isActive: true,
-    expiresAt: "2023-10-02T12:51:04.177Z",
-    date: "2023-10-02T10:53:08.652Z",
-  },
-  {
-    _id: "651aa155c4626d73f4a19b6b",
-    module: "IFS3A",
-    questions: [
-      {
-        questionText: "What is the capital of France?",
-        options: ["Rome", "Madrid", "Paris", "Berlin"],
-        correctAnswer: 2,
-        _id: "651aa155c4626d73f4a19b6c",
-      },
-      {
-        questionText: "Which planet is known as the Red Planet?",
-        options: ["Earth", "Mars", "Jupiter", "Saturn"],
-        correctAnswer: 1,
-        _id: "651aa155c4626d73f4a19b6d",
-      },
-      {
-        questionText: "What is the largest ocean on Earth?",
-        options: [
-          "Atlantic Ocean",
-          "Indian Ocean",
-          "Arctic Ocean",
-          "Pacific Ocean",
-        ],
-        correctAnswer: 3,
-        _id: "651aa155c4626d73f4a19b6e",
-      },
-    ],
-    title: "General Knowledge Quiz",
-    isActive: true,
-    expiresAt: "2023-10-02T12:51:04.177Z",
-    date: "2023-10-02T10:54:13.975Z",
-  },
-];
-
-const ClassQuizes = (props: Props) => {
+const ClassQuizes = ({ module }: Props) => {
   const [expanded, setExpanded] = React.useState<boolean>(false);
-  //get quizzes of this module from server using the module id
+  const token = useSelector(selectUserToken);
+  const {
+    data: quizzes,
+    isLoading,
+    error,
+  } = useQuery([`quiz${module.moduleCode}`, module._id, token], () =>
+    getQuizzesByModuleId(module._id, token as string)
+  );
 
+  if (isLoading) {
+    return (
+      <View
+        style={{
+          padding: 20,
+          borderRadius: 10,
+          backgroundColor: themeColors.quaternaryShaded[100],
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Text>Loading Quiz...</Text>
+      </View>
+    );
+  }
+  if (error) {
+    return (
+      <View
+        style={{
+          padding: 20,
+          borderRadius: 10,
+          backgroundColor: themeColors.quaternaryShaded[100],
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Text>{(error as Error).message}</Text>
+      </View>
+    );
+  }
+
+  //   console.log("\n\n\nQUIZZZZZZ", JSON.stringify(quizzes, null, 2));
+  //   return null;
   return (
     <View style={{ width: "100%" }}>
-      <ClassQuizModal
-        quizzes={quizzes}
-        modalVisible={expanded}
-        setModalVisible={setExpanded}
-      />
+      {quizzes && quizzes.length > 0 && (
+        <ClassQuizModal
+          quizzes={quizzes}
+          modalVisible={expanded}
+          setModalVisible={setExpanded}
+        />
+      )}
       <ListItem.Accordion
         Component={TouchableOpacity}
         containerStyle={{
@@ -105,7 +86,7 @@ const ClassQuizes = (props: Props) => {
             }}
           >
             <Avatar
-              title="IFS3A"
+              title={module.moduleCode}
               titleStyle={{
                 color: "#222",
                 fontSize: 20,
@@ -126,7 +107,7 @@ const ClassQuizes = (props: Props) => {
                 fontFamily: "UrbanistSemiBold",
               }}
             >
-              Information Sytems 3A
+              {module.moduleName}
             </ListItem.Title>
           </ListItem.Content>
         }

@@ -8,6 +8,10 @@ const Quiz = (props: Props) => {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="answerQuiz"
+        options={{ presentation: "modal", headerShown: false }}
+      />
     </Stack>
   );
 };

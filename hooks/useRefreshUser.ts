@@ -14,11 +14,9 @@ export const useRefreshUser = () => {
 
   const handleRefresh = useCallback(async () => {
     setRefreshing(true);
-    console.log("\n\nBEFORE UPDATE\n\n", JSON.stringify(user, null, 2));
     try {
       const updatedUserData = await getUser(user._id, user.token);
       dispatch(setUser(updatedUserData));
-      console.log("\n\n[NEW USER]\n", updatedUserData);
     } catch (error) {
       console.error("Failed to refresh user data:", error);
     } finally {
