@@ -112,7 +112,7 @@ export async function registerUser({
       wallet: responseData.userResponse.wallet,
       token: responseData.userResponse.token,
       modules: responseData.userResponse.modules,
-      consecutiveLogins: responseData.user.consecutiveLogins,
+      consecutiveLogins: responseData.userResponse.consecutiveLogins,
     };
 
     console.log("\n\n[REGISTER][TOKEN]:", JSON.stringify(user, null, 2));
@@ -122,7 +122,7 @@ export async function registerUser({
       token: user.token,
     };
     await setUserTokenToLocalStorage(localData);
-
+    console.log("GOT HERE");
     return user;
   } catch (error) {
     console.log("\n\n[REGISTER][ERROR]:", JSON.stringify(error, null, 2));
@@ -150,8 +150,7 @@ export async function getUser(id: string, token: string): Promise<User> {
 
     return user;
   } catch (error) {
-    console.log("\n\n[GET USER][ERROR]:", JSON.stringify(error, null, 2));
-    throw Error((error as Error).message);
+    throw error;
   }
 }
 interface ErrorResponse {

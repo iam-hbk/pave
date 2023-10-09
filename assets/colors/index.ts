@@ -1,8 +1,8 @@
 const themeColors = {
   // Main Colors with Shades
-  primary: "#F9423A",
-  primaryLight: "#FC6B64",
-  primaryDark: "#E01A20",
+  primary: "#5B88D9",
+  primaryLight: "#7CA0E6",
+  primaryDark: "#4071BC",
   primaryShaded: {
     100: "#FFEBEB",
     200: "#FFC9C9",

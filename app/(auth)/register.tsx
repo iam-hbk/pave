@@ -1,25 +1,24 @@
-import { SafeAreaView, View, Platform } from "react-native";
+import { View, Platform } from "react-native";
 import React from "react";
-import { Link, router } from "expo-router";
-import { Button, Text, Input, Icon, useTheme, InputProps } from "@rneui/themed";
+import { router } from "expo-router";
+import { Button, Text, Input, Icon, useTheme } from "@rneui/themed";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/utils/redux/features/user/userSlice";
 import { registerUser, loginUser } from "@/utils/redux/features/user/user";
 import { EvilIcons, Ionicons } from "@expo/vector-icons";
-
+import { useMutation } from "@tanstack/react-query";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { KeyboardAvoidingView } from "react-native";
 import { RegisterProps } from "@/types";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 
 interface RegisterPropsExt extends RegisterProps {
   confirmPassword: string;
 }
 
-const LoginSchema = Yup.object().shape({
+const RegisterSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   email: Yup.string()
     .email("Invalid email")
@@ -39,15 +38,8 @@ const Register = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const { theme } = useTheme();
 
-  const handleRegister = async (values: RegisterPropsExt) => {
-    const v: RegisterProps = {
-      ...values,
-      email: values.email.toLowerCase(),
-      name: values.name.toLowerCase(),
-    };
-    console.log("DATA:", JSON.stringify(v, null, 2));
-    try {
-      const result = await registerUser(v);
+  const registerMutation = useMutation(registerUser, {
+    onSuccess: (result) => {
       dispatch(setUser(result));
       Toast.show({
         type: "success",
@@ -58,7 +50,8 @@ const Register = () => {
         topOffset: 50,
       });
       router.replace("/(app)/home/main");
-    } catch (error: any) {
+    },
+    onError: (error: any) => {
       Toast.show({
         type: "error",
         position: "top",
@@ -68,7 +61,20 @@ const Register = () => {
         autoHide: true,
         topOffset: 50,
       });
-    }
+    },
+  });
+
+  const handleRegister = async (values: RegisterPropsExt) => {
+    const v: RegisterProps = {
+      ...values,
+      email: values.email.toLowerCase(),
+      name: values.name.toLowerCase(),
+    };
+    console.log("DATA:", JSON.stringify(v, null, 2));
+    if (registerMutation.isLoading) return;
+    if (registerMutation.isSuccess) return;
+    if (registerMutation.isError) registerMutation.reset();
+    registerMutation.mutate(v);
   };
 
   return (
@@ -90,7 +96,7 @@ const Register = () => {
           role: "Student",
           consecutiveLogins: 0,
         }}
-        validationSchema={LoginSchema}
+        validationSchema={RegisterSchema}
         onSubmit={handleRegister}
       >
         {({

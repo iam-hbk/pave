@@ -12,7 +12,7 @@ const theme = createTheme({
         borderRadius: 7,
         padding: 15,
         paddingHorizontal: 20,
-        backgroundColor: themeColors.primaryButtonBackground,
+        // backgroundColor: themeColors.primaryButtonBackground,
       },
       titleStyle: {
         fontFamily: "UrbanistRegular",

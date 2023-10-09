@@ -51,7 +51,6 @@ const Coins = () => {
     }
   };
 
-  const { theme } = useTheme();
   const days = ["day 1", "day 2", "day 3", "day 4", "day 5"];
   return (
     <View
@@ -116,7 +115,7 @@ const Coins = () => {
             }}
           >
             {days.map((day, index) => {
-              if (index !== consecutiveLogins) {
+              if (index + 1 !== consecutiveLogins) {
                 return (
                   <Stack key={index} justify="center" align="center">
                     <Stack
@@ -176,7 +175,7 @@ const Coins = () => {
             })}
           </Stack>
           <Stack>
-            {!alreadyCheckedIn && (
+            {/* {!alreadyCheckedIn && (
               <Button
                 onPress={handleCheckin}
                 buttonStyle={{
@@ -186,7 +185,17 @@ const Coins = () => {
                 Check in{" "}
               </Button>
             )}
-            {alreadyCheckedIn && <Button>See you Tomorrow!</Button>}
+            {alreadyCheckedIn && <Button>See you Tomorrow!</Button>} */}
+            {
+              <Button
+                disabled={alreadyCheckedIn}
+                onPress={handleCheckin}
+                buttonStyle={{
+                  backgroundColor: themeColors.tertiaryShaded[600],
+                }}
+                title={alreadyCheckedIn ? "See you Tomorrow!" : "Check in"}
+              />
+            }
           </Stack>
         </Stack>
       </LinearGradient>
