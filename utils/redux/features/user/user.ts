@@ -24,6 +24,7 @@ export async function loginUser({
       wallet: responseData.user.wallet,
       token: responseData.user.token,
       modules: responseData.user.modules,
+      consecutiveLogins: responseData.user.consecutiveLogins,
     };
 
     // Save the user data to local storage
@@ -83,6 +84,7 @@ export async function registerUser({
   email,
   password,
   role = "Student",
+  consecutiveLogins = 0,
 }: RegisterProps): Promise<User> {
   try {
     // Use the axios instance to make your POST request
@@ -91,6 +93,7 @@ export async function registerUser({
       email,
       password,
       role,
+      consecutiveLogins,
     });
 
     const responseData = response.data;
@@ -109,6 +112,7 @@ export async function registerUser({
       wallet: responseData.userResponse.wallet,
       token: responseData.userResponse.token,
       modules: responseData.userResponse.modules,
+      consecutiveLogins: responseData.userResponse.consecutiveLogins,
     };
 
     console.log("\n\n[REGISTER][TOKEN]:", JSON.stringify(user, null, 2));
@@ -118,7 +122,7 @@ export async function registerUser({
       token: user.token,
     };
     await setUserTokenToLocalStorage(localData);
-
+    console.log("GOT HERE");
     return user;
   } catch (error) {
     console.log("\n\n[REGISTER][ERROR]:", JSON.stringify(error, null, 2));
@@ -141,12 +145,12 @@ export async function getUser(id: string, token: string): Promise<User> {
       wallet: responseData.user.wallet,
       modules: responseData.user.modules,
       token: responseData.user.token,
+      consecutiveLogins: responseData.user.consecutiveLogins,
     };
 
     return user;
   } catch (error) {
-    console.log("\n\n[GET USER][ERROR]:", JSON.stringify(error, null, 2));
-    throw Error((error as Error).message);
+    throw error;
   }
 }
 interface ErrorResponse {
@@ -180,16 +184,9 @@ export async function generateShortCode(): Promise<string> {
           {
             role: "system",
             content:
-              "Generate only one,short,funny quote to motivate student,  be creative, keep it to one short line, max 10 words.",
+              "Craft a witty, be original, short quote, max 10 words, to inspire students.",
           },
         ],
-        // max_tokens: 2000,
-        // n: 1,
-        // stop: null,
-        // temperature: 0.5,
-        // top_p: 1.0,
-        // frequency_penalty: 0.0,
-        // presence_penalty: 0.0,,
       },
       {
         headers: {

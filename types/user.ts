@@ -7,12 +7,14 @@ export type User = {
   wallet: number;
   token: string;
   modules: string[];
+  consecutiveLogins: number;
 };
 export type RegisterProps = {
   email: string;
   password: string;
   name: string;
   role: "Student" | "Lecturer" | "Admin";
+  consecutiveLogins: 0;
 };
 
 export type LoginProps = {

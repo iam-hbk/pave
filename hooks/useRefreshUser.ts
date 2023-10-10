@@ -16,6 +16,7 @@ export const useRefreshUser = () => {
     setRefreshing(true);
     try {
       const updatedUserData = await getUser(user._id, user.token);
+      console.log("updatedUserData", updatedUserData);
       dispatch(setUser(updatedUserData));
     } catch (error) {
       console.error("Failed to refresh user data:", error);

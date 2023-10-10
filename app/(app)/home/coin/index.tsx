@@ -1,6 +1,8 @@
 import { View, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Text, Button, useTheme, Card } from "@rneui/themed";
+import axios from "axios";
+
 import {
   CheckedInIcon,
   CheckedInIconToday,
@@ -11,9 +13,57 @@ import themeColors from "@/assets/colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { Stack } from "@rneui/layout";
 import { Image } from "@rneui/themed";
+import { useSelector } from "react-redux";
+import {
+  selectUser,
+  selectUserId,
+  selectUserToken,
+} from "@/utils/redux/features/user/userSlice";
+import CheckIn from "@/utils/redux/features/Checkin/checkIn";
+import api from "@/utils/redux/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+// const responseData: any = await api.url("/users/login").post({
+// const responseData: any = await api.url("/users/login").post({
 
 const Coins = () => {
-  const { theme } = useTheme();
+  const [alreadyCheckedIn, setAlreadyCheckedIn] = useState(false);
+  const user = useSelector(selectUser);
+  const queryClient = useQueryClient();
+  let consecutiveLogins = user?.consecutiveLogins;
+
+  const token = useSelector(selectUserToken);
+  const userId = useSelector(selectUserId);
+  console.log(token);
+
+  console.log(user);
+  const checkinMutation = useMutation(
+    async () => {
+      const response = await api
+        .url("/users/checkin")
+        .headers({
+          Accept: "*/*",
+          Authorization: `Bearer ${token}`,
+        })
+        .post({ id: userId });
+      return response;
+    },
+    {
+      onSuccess: () => {
+        setAlreadyCheckedIn(true);
+        // Invalidate and refetch something when the mutation is successful
+        queryClient.invalidateQueries({ queryKey: ["getUser", userId, token] });
+      },
+      onError: (error) => {
+        console.error("Error during the request:", error);
+      },
+    }
+  );
+
+  const handleCheckin = () => {
+    checkinMutation.mutate();
+  };
+
   const days = ["day 1", "day 2", "day 3", "day 4", "day 5"];
   return (
     <View
@@ -78,7 +128,7 @@ const Coins = () => {
             }}
           >
             {days.map((day, index) => {
-              if (index !== 3) {
+              if (index + 1 !== consecutiveLogins) {
                 return (
                   <Stack key={index} justify="center" align="center">
                     <Stack
@@ -138,13 +188,27 @@ const Coins = () => {
             })}
           </Stack>
           <Stack>
-            <Button
-              buttonStyle={{
-                backgroundColor: themeColors.tertiaryShaded[600],
-              }}
-            >
-              Check in{" "}
-            </Button>
+            {/* {!alreadyCheckedIn && (
+              <Button
+                onPress={handleCheckin}
+                buttonStyle={{
+                  backgroundColor: themeColors.tertiaryShaded[600],
+                }}
+              >
+                Check in{" "}
+              </Button>
+            )}
+            {alreadyCheckedIn && <Button>See you Tomorrow!</Button>} */}
+            {
+              <Button
+                disabled={alreadyCheckedIn}
+                onPress={handleCheckin}
+                buttonStyle={{
+                  backgroundColor: themeColors.tertiaryShaded[600],
+                }}
+                title={alreadyCheckedIn ? "See you Tomorrow!" : "Check in"}
+              />
+            }
           </Stack>
         </Stack>
       </LinearGradient>

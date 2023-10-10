@@ -90,6 +90,7 @@ export async function setUserTokenToLocalStorage(
 ): Promise<void> {
   try {
     await AsyncStorage.setItem("token", JSON.stringify(token));
+    console.log("User token saved to local storage");
   } catch (error) {
     console.log("Error saving user token to local storage", error);
     Toast.show({

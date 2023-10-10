@@ -220,7 +220,14 @@ const Profile = () => {
             source={{ uri: user?.profilePicture || userprofilePicture }}
             size={100}
           />
-          <Text h4>{user ? user?.name : "Sanah R"}</Text>
+          <Text
+            h4
+            h4Style={{
+              textTransform: "capitalize",
+            }}
+          >
+            {user ? user?.name : "Sanah R"}
+          </Text>
         </Stack>
         <Text h4>My Profile</Text>
         {/* stack 2 -  user stats */}

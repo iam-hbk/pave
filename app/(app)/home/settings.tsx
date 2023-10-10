@@ -1,21 +1,40 @@
 import { SafeAreaView, StyleSheet, View } from "react-native";
 import React from "react";
-import { Link, router } from "expo-router";
 import { Button, Text, useTheme } from "@rneui/themed";
 import { Stack } from "@rneui/layout";
-import { selectUser, unSetUser } from "@/utils/redux/features/user/userSlice";
+import {
+  selectUser,
+  selectUserId,
+  selectUserToken,
+  unSetUser,
+} from "@/utils/redux/features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { BarCodeScanner } from "expo-barcode-scanner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { removeUserTokenFromLocalStorage } from "@/utils/helpers";
+import { router } from "expo-router";
 
 const Settings = () => {
-  const user = useSelector(selectUser);
   const dispatch = useDispatch();
-  const [scanned, setScanned] = React.useState<boolean>(false);
-  const theme = useTheme();
+  const userId = useSelector(selectUserId);
+  const token = useSelector(selectUserToken);
+  const queryClient = useQueryClient();
+
+  const logoutMutation = useMutation({
+    mutationFn: removeUserTokenFromLocalStorage,
+    onSuccess: () => {
+      console.log("LOGOUT", token, userId);
+      dispatch(unSetUser());
+      queryClient.invalidateQueries({ queryKey: ["getUser", userId, token] });
+      router.replace({
+        pathname: "/",
+        params: { logout: "" },
+      });
+      console.log("LOGOUT SUCCESS");
+    },
+  });
 
   const handleLogout = () => {
-    dispatch(unSetUser());
-    router.replace("/(auth)/welcome");
+    logoutMutation.mutate();
   };
 
   return (

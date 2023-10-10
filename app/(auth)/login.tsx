@@ -12,6 +12,7 @@ import { LoginProps } from "@/types";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import themeColors from "@/assets/colors";
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email")
@@ -47,6 +48,7 @@ const Login = () => {
       });
       router.replace("/(app)/home/main");
     } catch (error: any) {
+      // console
       Toast.show({
         type: "error",
         position: "top",
@@ -68,6 +70,7 @@ const Login = () => {
         flex: 1,
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
+        backgroundColor: themeColors.quaternaryShaded[100],
         gap: 30,
       }}
     >
