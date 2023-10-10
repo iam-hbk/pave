@@ -39,7 +39,7 @@ const theme = createTheme({
       },
       inputContainerStyle: {
         padding: 10,
-        backgroundColor: "#E7E7E7",
+        backgroundColor: "#fff",
         borderRadius: 10,
         borderWidth: 1,
         borderColor: "#8391A150",

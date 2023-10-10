@@ -29,12 +29,23 @@ const DailyQuestionComponent = ({
   style = {},
   containerStyle = {},
 }: Props) => {
-  const token = useSelector(selectUserToken) as string;
+  const token = useSelector(selectUserToken);
   const {
     data: dailyQuestion,
     error,
     isLoading,
-  } = useQuery(["dailyQuestion", token], () => getDailyQuestion(token));
+  } = useQuery(
+    ["dailyQuestion", token],
+    async () => {
+      if (token) {
+        return await getDailyQuestion(token);
+      } else return null;
+    },
+    {
+      enabled: !!token,
+      retry: 1,
+    }
+  );
 
   if (error) {
     return (

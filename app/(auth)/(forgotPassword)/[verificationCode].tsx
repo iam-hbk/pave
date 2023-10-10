@@ -5,18 +5,22 @@ import { Button, Text, Input, Icon, useTheme, InputProps } from "@rneui/themed";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/utils/redux/features/user/userSlice";
 import { loginUser } from "@/utils/redux/features/user/user";
-
+import {Platform} from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { OTPBlob } from "@/components/icons";
 import { useLocalSearchParams } from "expo-router";
 import { useFocusEffect } from "expo-router";
+import themeColors from "@/assets/colors";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 const LoginSchema = Yup.object().shape({
   code: Yup.string().required("Code is required"),
 });
 
 const CodeVerification = () => {
   const dispatch = useDispatch();
+  const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{ verificationCode: string }>();
   //   const { verificationCode } = useLocalSearchParams();
   const { theme } = useTheme();
@@ -32,12 +36,14 @@ const CodeVerification = () => {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        marginHorizontal: 15,
-        margin: 20,
-      }}
+    <KeyboardAvoidingView
+    behavior={Platform.OS === "ios" ? "padding" : undefined}
+    style={{
+      paddingTop: insets.top,
+      alignItems: "center",
+      flex: 1,
+      backgroundColor: themeColors.quaternaryShaded[100],
+    }}
     >
       <Formik
         initialValues={{ code: "" }}
@@ -52,13 +58,7 @@ const CodeVerification = () => {
           errors,
           isSubmitting,
         }) => (
-          <KeyboardAvoidingView
-            behavior="padding"
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <>
             <Text
               h1
               style={{
@@ -114,22 +114,25 @@ const CodeVerification = () => {
                 onPress={() => handleSubmit()}
               />
             </View>
-            <Text
+            <View
               style={{
                 alignSelf: "center",
-                fontSize: 18,
+                flexDirection: "row",
+                alignItems: "center",
                 margin: 10,
               }}
             >
-              Didn’t received code?{" "}
-              <Link href={"/(auth)/login"} asChild>
-                <Text style={{ color: theme.colors.primary }}>Resend</Text>
-              </Link>
-            </Text>
-          </KeyboardAvoidingView>
+              <Text style={{ fontSize: 18 }}>Didn't get the code ? </Text>
+              <TouchableOpacity onPress={() => router.push("/(auth)/login")}>
+                <Text style={{ color: theme.colors.primary, fontSize: 18 }}>
+                  Resend
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </>
         )}
       </Formik>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 

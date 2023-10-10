@@ -20,7 +20,6 @@ export const userSlice = createSlice({
       state.user = action.payload;
     },
     unSetUser: (state) => {
-      removeUserTokenFromLocalStorage();
       state.user = null;
     },
     updateUser: (state, action: PayloadAction<User>) => {

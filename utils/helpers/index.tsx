@@ -106,7 +106,6 @@ export async function setUserTokenToLocalStorage(
 }
 
 export async function getUserTokenFromLocalStorage(): Promise<LocalStorageUser | null> {
-
   try {
     const tokenString = await AsyncStorage.getItem("token");
     return tokenString ? JSON.parse(tokenString) : null;

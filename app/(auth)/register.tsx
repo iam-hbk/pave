@@ -13,6 +13,7 @@ import { KeyboardAvoidingView } from "react-native";
 import { RegisterProps } from "@/types";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
+import themeColors from "@/assets/colors";
 
 interface RegisterPropsExt extends RegisterProps {
   confirmPassword: string;
@@ -85,6 +86,7 @@ const Register = () => {
         justifyContent: "center",
         flex: 1,
         gap: 40,
+        backgroundColor: themeColors.quaternaryShaded[100],
       }}
     >
       <Formik

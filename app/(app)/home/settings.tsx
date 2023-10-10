@@ -2,17 +2,39 @@ import { SafeAreaView, StyleSheet, View } from "react-native";
 import React from "react";
 import { Button, Text, useTheme } from "@rneui/themed";
 import { Stack } from "@rneui/layout";
-import { selectUser, unSetUser } from "@/utils/redux/features/user/userSlice";
+import {
+  selectUser,
+  selectUserId,
+  selectUserToken,
+  unSetUser,
+} from "@/utils/redux/features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { removeUserTokenFromLocalStorage } from "@/utils/helpers";
+import { router } from "expo-router";
 
 const Settings = () => {
   const dispatch = useDispatch();
+  const userId = useSelector(selectUserId);
+  const token = useSelector(selectUserToken);
   const queryClient = useQueryClient();
 
+  const logoutMutation = useMutation({
+    mutationFn: removeUserTokenFromLocalStorage,
+    onSuccess: () => {
+      console.log("LOGOUT", token, userId);
+      dispatch(unSetUser());
+      queryClient.invalidateQueries({ queryKey: ["getUser", userId, token] });
+      router.replace({
+        pathname: "/",
+        params: { logout: "" },
+      });
+      console.log("LOGOUT SUCCESS");
+    },
+  });
+
   const handleLogout = () => {
-    dispatch(unSetUser());
-    queryClient.invalidateQueries();
+    logoutMutation.mutate();
   };
 
   return (

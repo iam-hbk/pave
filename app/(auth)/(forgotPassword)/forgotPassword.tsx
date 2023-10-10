@@ -16,6 +16,7 @@ import * as Yup from "yup";
 import { ForgotPasswordBlob } from "@/components/icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import themeColors from "@/assets/colors";
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email")
@@ -48,6 +49,7 @@ const ForgotPassword = () => {
         paddingTop: insets.top,
         alignItems: "center",
         flex: 1,
+        backgroundColor: themeColors.quaternaryShaded[100],
       }}
     >
       <Formik

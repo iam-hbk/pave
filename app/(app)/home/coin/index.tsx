@@ -21,6 +21,7 @@ import {
 } from "@/utils/redux/features/user/userSlice";
 import CheckIn from "@/utils/redux/features/Checkin/checkIn";
 import api from "@/utils/redux/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 // const responseData: any = await api.url("/users/login").post({
 // const responseData: any = await api.url("/users/login").post({
@@ -28,6 +29,7 @@ import api from "@/utils/redux/api";
 const Coins = () => {
   const [alreadyCheckedIn, setAlreadyCheckedIn] = useState(false);
   const user = useSelector(selectUser);
+  const queryClient = useQueryClient();
   let consecutiveLogins = user?.consecutiveLogins;
 
   const token = useSelector(selectUserToken);
@@ -35,8 +37,8 @@ const Coins = () => {
   console.log(token);
 
   console.log(user);
-  const handleCheckin = async () => {
-    try {
+  const checkinMutation = useMutation(
+    async () => {
       const response = await api
         .url("/users/checkin")
         .headers({
@@ -44,11 +46,22 @@ const Coins = () => {
           Authorization: `Bearer ${token}`,
         })
         .post({ id: userId });
-      setAlreadyCheckedIn(true);
-      console.log(response);
-    } catch (error) {
-      console.error("Error during the request:", error);
+      return response;
+    },
+    {
+      onSuccess: () => {
+        setAlreadyCheckedIn(true);
+        // Invalidate and refetch something when the mutation is successful
+        queryClient.invalidateQueries({ queryKey: ["getUser", userId, token] });
+      },
+      onError: (error) => {
+        console.error("Error during the request:", error);
+      },
     }
+  );
+
+  const handleCheckin = () => {
+    checkinMutation.mutate();
   };
 
   const days = ["day 1", "day 2", "day 3", "day 4", "day 5"];
