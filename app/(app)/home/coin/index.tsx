@@ -9,6 +9,12 @@ import {
   GoldenCoin,
   Logo,
 } from "@/components/icons";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from "react-native-reanimated";
+
 import themeColors from "@/assets/colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { Stack } from "@rneui/layout";
@@ -22,12 +28,16 @@ import {
 import CheckIn from "@/utils/redux/features/Checkin/checkIn";
 import api from "@/utils/redux/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { getQuizzesByModuleId } from "@/utils/redux/features/questions/question";
 
 // const responseData: any = await api.url("/users/login").post({
 // const responseData: any = await api.url("/users/login").post({
 
 const Coins = () => {
+  const scale = useSharedValue(1);
+
   const [alreadyCheckedIn, setAlreadyCheckedIn] = useState(false);
+
   const user = useSelector(selectUser);
   const queryClient = useQueryClient();
   let consecutiveLogins = user?.consecutiveLogins;
@@ -55,14 +65,25 @@ const Coins = () => {
         queryClient.invalidateQueries({ queryKey: ["getUser", userId, token] });
       },
       onError: (error) => {
+        setAlreadyCheckedIn(true);
         console.error("Error during the request:", error);
       },
     }
   );
 
+ 
+
   const handleCheckin = () => {
+    scale.value = withSpring(0.9, { stiffness: 200, damping: 10 }, () => {
+      scale.value = withSpring(1); // Reset to original scale after animation
+    });
     checkinMutation.mutate();
   };
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+    };
+  });
 
   const days = ["day 1", "day 2", "day 3", "day 4", "day 5"];
   return (
@@ -199,7 +220,7 @@ const Coins = () => {
               </Button>
             )}
             {alreadyCheckedIn && <Button>See you Tomorrow!</Button>} */}
-            {
+            <Animated.View style={animatedStyle}>
               <Button
                 disabled={alreadyCheckedIn}
                 onPress={handleCheckin}
@@ -208,7 +229,7 @@ const Coins = () => {
                 }}
                 title={alreadyCheckedIn ? "See you Tomorrow!" : "Check in"}
               />
-            }
+            </Animated.View>
           </Stack>
         </Stack>
       </LinearGradient>
