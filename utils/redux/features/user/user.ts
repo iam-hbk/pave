@@ -184,7 +184,7 @@ export async function generateShortCode(): Promise<string> {
           {
             role: "system",
             content:
-              "Craft a witty, be original, short quote, max 10 words, to inspire students.",
+              "Craft a witty, be original, short quote, max 10 words, to inspire students and be very funny,be innovative and nothing about procrastination",
           },
         ],
       },

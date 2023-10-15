@@ -31,8 +31,11 @@ const Auth = () => {
       <Drawer.Screen
         name="quiz"
         options={{
-          // headerShown: false,
+          headerShown: false,
           title: "Quiz",
+          // hide the tab bar when the quiz is in progress
+          
+   
         }}
       />
     </Drawer>

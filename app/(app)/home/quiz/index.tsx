@@ -32,9 +32,10 @@ const Index = (props: Props) => {
   const insets = useSafeAreaInsets();
   const user = useSelector(selectUser) as User;
   const token = useSelector(selectUserToken);
-  const [quizData, setQuizData] = React.useState<QuizData>(); // [quizData, setQuizData
+  // const [quizData, setQuizData] = React.useState<QuizData>();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState(false);
+  const [quizId, setQuizId] = useState<string>("");
 
   const getBarCodeScannerPermissions = async (): Promise<void> => {
     const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -47,30 +48,36 @@ const Index = (props: Props) => {
   const [isModalQuestionVisible, setIsModalQuestionVisible] =
     React.useState<boolean>(false);
 
-  async function getQuizById() {
-    const bearerToken = `Bearer ${token}`; // Rename to avoid shadowing
-    const id = "6529e1e5d837478f21eff205";
-
+  async function getQuizById(id: string) {
+    const bearerToken = `Bearer ${token}`;
     try {
       const response = (await api
         .auth(bearerToken)
         .get(`/quiz/${id}`)) as QuizData;
-      setQuizData(response);
-      console.log(response);
+      return response;
+      // console.log(response);
     } catch (error) {
       console.error("Error fetching quiz by ID:", error);
     }
   }
   const handleBarCodeScanned = React.useCallback(
-    ({ type, data }: { type: string; data: any }) => {
+    async ({ type, data }: { type: string; data: any }) => {
       if (typeof data === "string") {
         setScanned(true);
-        console.log("data", data);
-        router.push({
-          pathname: "/(app)/home/qr/displayClass",
-          params: { classQR: data },
-          // params: { classQR: decryptTheQrCode(data) },
-        });
+        setQuizId(data);
+
+        const fetchedQuizData = await getQuizById(data);
+
+        if (fetchedQuizData) {
+          const serializedData = JSON.stringify(fetchedQuizData);
+          // console.log(fetchedQuizData);
+          router.replace({
+            pathname: "/(app)/home/quiz/answerQuiz",
+            params: { quizData: serializedData },
+          });
+        }
+
+       
       } else {
         Toast.show({
           type: "error",
@@ -85,9 +92,9 @@ const Index = (props: Props) => {
     },
     []
   );
-  useEffect(() => {
-    getQuizById();
-  }, []); // Note that we just reference the function in the dependency array, not call it
+  // useEffect(() => {
+  //   getQuizById();
+  // }, []);
 
   return (
     <ScrollView
@@ -130,7 +137,7 @@ const Index = (props: Props) => {
         >
           Great to see you again !
         </Text>
-        <Text>{JSON.stringify(quizData)}</Text>
+        {/* <Text>{JSON.stringify(quizData)}</Text> */}
       </View>
       <View
         style={{
@@ -310,14 +317,13 @@ const Index = (props: Props) => {
         </TouchableOpacity>
       </View>
       {/*maybe when it's clicked,redirect to QR CODE page that will handle both attendance and QUizzes  */}
-      <Button>Scan QR Code</Button>
-      {/* <View
+      <Text h4>Scan QR Code to access the quiz</Text>
+      <View
         style={{
-          height: 300,
+          height: 400,
           width: "100%",
         }}
       >
-        <Text>Hi</Text>
         <BarCodeScanner
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={StyleSheet.absoluteFillObject}
@@ -328,7 +334,7 @@ const Index = (props: Props) => {
             onPress={() => setScanned(false)}
           />
         )}
-      </View> */}
+      </View>
       <QuizList />
     </ScrollView>
   );
