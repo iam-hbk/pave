@@ -8,6 +8,7 @@ import {
   CheckedInIconToday,
   GoldenCoin,
   Logo,
+
 } from "@/components/icons";
 import Animated, {
   useSharedValue,
@@ -71,8 +72,6 @@ const Coins = () => {
     }
   );
 
- 
-
   const handleCheckin = () => {
     scale.value = withSpring(0.9, { stiffness: 200, damping: 10 }, () => {
       scale.value = withSpring(1); // Reset to original scale after animation
@@ -84,7 +83,6 @@ const Coins = () => {
       transform: [{ scale: scale.value }],
     };
   });
-
   const days = ["day 1", "day 2", "day 3", "day 4", "day 5"];
   return (
     <View
