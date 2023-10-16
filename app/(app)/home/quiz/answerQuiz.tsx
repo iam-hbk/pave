@@ -14,8 +14,8 @@ type Props = {};
 const AnswerQuiz = (props: Props) => {
   const params = useGlobalSearchParams();
   const insets = useSafeAreaInsets();
+  const quiz: QuizData = JSON.parse(params.quizData as string);
 
-  const quiz: QuizData = JSON.parse(params.quiz as string);
   return (
     <View
       style={{
@@ -71,7 +71,6 @@ const AnswerQuiz = (props: Props) => {
           {formatDate(quiz.expiresAt)}
         </Text>
       </View>
-      <Link href={"/home/quiz/submitQuiz"}>Submit Quiz</Link>
       <Button
         style={{
           alignSelf: "flex-end",
@@ -84,7 +83,13 @@ const AnswerQuiz = (props: Props) => {
           fontFamily: "UrbanistBold",
         }}
         title={"Start Quiz"}
-        onPress={() => {}}
+        onPress={() => {
+          console.log("Clicked")
+          router.push({
+            pathname: "/AnswerQuiz",
+            params: { quizData: JSON.stringify(quiz) },
+          });
+        }}
       />
     </View>
   );

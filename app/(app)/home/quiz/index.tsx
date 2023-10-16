@@ -1,29 +1,100 @@
-import { ScrollView, View } from "react-native";
-import React from "react";
-import { Text } from "@rneui/themed";
+import { ScrollView, View, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Button, Text } from "@rneui/themed";
+import axios from "axios";
+import { BarCodeScanner } from "expo-barcode-scanner";
+
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser, setUser } from "@/utils/redux/features/user/userSlice";
+import {
+  selectUser,
+  selectUserToken,
+  setUser,
+} from "@/utils/redux/features/user/userSlice";
 import themeColors from "@/assets/colors";
 import { LinearGradient } from "expo-linear-gradient";
 import DailyQuestion from "@/components/dailyQuestion";
 import { Coin } from "@/components/icons";
 import { Ionicons } from "@expo/vector-icons";
 import RankingCard from "@/components/rankCard";
-import { User } from "@/types";
+import { QuizData, User } from "@/types";
 import { TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import LottieView from "lottie-react-native";
 import QuizList from "@/components/quizList";
+import { getQuizzesByModuleId } from "@/utils/redux/features/questions/question";
+import api from "@/utils/redux/api";
+import Toast from "react-native-toast-message";
 
 type Props = {};
 
 const Index = (props: Props) => {
   const insets = useSafeAreaInsets();
   const user = useSelector(selectUser) as User;
+  const token = useSelector(selectUserToken);
+  // const [quizData, setQuizData] = React.useState<QuizData>();
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+  const [scanned, setScanned] = useState(false);
+  const [quizId, setQuizId] = useState<string>("");
+
+  const getBarCodeScannerPermissions = async (): Promise<void> => {
+    const { status } = await BarCodeScanner.requestPermissionsAsync();
+    setHasPermission(status === "granted");
+  };
+  useEffect(() => {
+    getBarCodeScannerPermissions();
+  }, [hasPermission]);
 
   const [isModalQuestionVisible, setIsModalQuestionVisible] =
     React.useState<boolean>(false);
+
+  async function getQuizById(id: string) {
+    const bearerToken = `Bearer ${token}`;
+    try {
+      const response = (await api
+        .auth(bearerToken)
+        .get(`/quiz/${id}`)) as QuizData;
+      return response;
+      // console.log(response);
+    } catch (error) {
+      console.error("Error fetching quiz by ID:", error);
+    }
+  }
+  const handleBarCodeScanned = React.useCallback(
+    async ({ type, data }: { type: string; data: any }) => {
+      if (typeof data === "string") {
+        setScanned(true);
+        setQuizId(data);
+
+        const fetchedQuizData = await getQuizById(data);
+
+        if (fetchedQuizData) {
+          const serializedData = JSON.stringify(fetchedQuizData);
+          // console.log(fetchedQuizData);
+          router.replace({
+            pathname: "/(app)/home/quiz/answerQuiz",
+            params: { quizData: serializedData },
+          });
+        }
+
+       
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Invalid QR Code",
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 30,
+          bottomOffset: 40,
+        });
+      }
+    },
+    []
+  );
+  // useEffect(() => {
+  //   getQuizById();
+  // }, []);
 
   return (
     <ScrollView
@@ -66,6 +137,7 @@ const Index = (props: Props) => {
         >
           Great to see you again !
         </Text>
+        {/* <Text>{JSON.stringify(quizData)}</Text> */}
       </View>
       <View
         style={{
@@ -232,7 +304,7 @@ const Index = (props: Props) => {
             color: themeColors.grey4,
           }}
         >
-          ✍🏽 Class Quizzes
+          ✍🏽 Class Quizz
         </Text>
         <TouchableOpacity
           onPress={() => console.log("pressed")}
@@ -244,7 +316,25 @@ const Index = (props: Props) => {
           <Ionicons name="ios-filter" size={24} color="black" />
         </TouchableOpacity>
       </View>
-
+      {/*maybe when it's clicked,redirect to QR CODE page that will handle both attendance and QUizzes  */}
+      <Text h4>Scan QR Code to access the quiz</Text>
+      <View
+        style={{
+          height: 400,
+          width: "100%",
+        }}
+      >
+        <BarCodeScanner
+          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          style={StyleSheet.absoluteFillObject}
+        />
+        {scanned && (
+          <Button
+            title={"Tap to Scan Again"}
+            onPress={() => setScanned(false)}
+          />
+        )}
+      </View>
       <QuizList />
     </ScrollView>
   );

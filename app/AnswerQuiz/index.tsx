@@ -29,7 +29,9 @@ const SubmitQuiz = () => {
   };
   useEffect(() => {
     setProgress(completedQuizzes / quiz.questions.length);
-  }, [completedQuizzes]);
+  }
+  , [completedQuizzes]);
+
 
   const handleNext = () => {
     const length = quiz.questions.length;
@@ -42,6 +44,7 @@ const SubmitQuiz = () => {
       console.log("Quiz completed!");
     }
     if (completedQuizzes === quiz.questions.length - 1) {
+      router.back;
       Toast.show({
         type: "success",
         text1: "Quiz completed!",
@@ -57,10 +60,7 @@ const SubmitQuiz = () => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <TouchableOpacity
-          style={styles.closeButton}
-          onPress={() => router.back()}
-        >
+        <TouchableOpacity style={styles.closeButton} onPress={router.back}>
           <View
             style={{
               borderRadius: 99,

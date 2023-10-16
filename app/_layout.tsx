@@ -66,6 +66,7 @@ function RootLayoutNav() {
               screenOptions={{
                 headerShown: false,
                 animation: "fade",
+                
               }}
             />
           </SafeAreaProvider>

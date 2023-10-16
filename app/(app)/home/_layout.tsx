@@ -31,8 +31,16 @@ const Auth = () => {
       <Drawer.Screen
         name="quiz"
         options={{
-          // headerShown: false,
+          headerShown: false,
           title: "Quiz",
+
+        }}
+      />
+        <Drawer.Screen
+        name="school"
+        options={{
+          headerShown: false,
+          title: "School",
         }}
       />
     </Drawer>
